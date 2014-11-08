@@ -2,14 +2,14 @@
 namespace Icecave\Chastity\Exception;
 
 use Exception;
-use RuntimeException;
+use LogicException;
 
-class LockAcquisitionException extends RuntimeException
+class LockAlreadyAcquiredException extends LogicException
 {
     public function __construct($name, Exception $previous = null)
     {
         parent::__construct(
-            'Unable to acquire lock: ' . $name . '.',
+            'Lock has already been acquired: ' . $name . '.',
             0,
             $previous
         );

@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+error_reporting(-1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$c = new Predis\Client();
+$d = new Icecave\Chastity\Redis\RedisDriver($c, new Icecave\Druid\UuidVersion4Generator, 15);
+$f = new Icecave\Chastity\LockFactory($d);
+
+$l = $f->acquire('foo');
+sleep(3);

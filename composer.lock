@@ -4,8 +4,72 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d2bbc272789039a1c619eb066d22611c",
+    "hash": "d214c94423bdc049013b15e9ed404742",
     "packages": [
+        {
+            "name": "icecave/druid",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IcecaveStudios/druid.git",
+                "reference": "7f4e4f9ef54760b6c89b6ece95ce90f43b5d3c7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IcecaveStudios/druid/zipball/7f4e4f9ef54760b6c89b6ece95ce90f43b5d3c7d",
+                "reference": "7f4e4f9ef54760b6c89b6ece95ce90f43b5d3c7d",
+                "shasum": ""
+            },
+            "require": {
+                "icecave/isolator": "~2",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "icecave/archer": "~1"
+            },
+            "suggest": {
+                "eloquent/asplode": "Drop-in exception-based error handling."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Icecave\\Druid\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Harris",
+                    "email": "james.harris@icecave.com.au",
+                    "homepage": "https://github.com/jmalloc"
+                }
+            ],
+            "description": "An RFC-4122 compliant library for generating and parsing universally unique identifiers (UUIDs).",
+            "homepage": "https://github.com/IcecaveStudios/druid",
+            "keywords": [
+                "4122",
+                "RFC-4122",
+                "global",
+                "guid",
+                "id",
+                "identifer",
+                "random",
+                "rfc4122",
+                "unique",
+                "universal",
+                "universally",
+                "uuid"
+            ],
+            "time": "2014-09-09 04:46:51"
+        },
         {
             "name": "icecave/isolator",
             "version": "2.3.0",
@@ -180,12 +244,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eloquent/phony.git",
-                "reference": "84454975384e1aca93a4c762452ff7ad4a93a350"
+                "reference": "b9d6787c36209fb642122b5ed06912477e9a01f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eloquent/phony/zipball/84454975384e1aca93a4c762452ff7ad4a93a350",
-                "reference": "84454975384e1aca93a4c762452ff7ad4a93a350",
+                "url": "https://api.github.com/repos/eloquent/phony/zipball/b9d6787c36209fb642122b5ed06912477e9a01f3",
+                "reference": "b9d6787c36209fb642122b5ed06912477e9a01f3",
                 "shasum": ""
             },
             "require": {
@@ -244,7 +308,7 @@
                 "stubbing",
                 "test"
             ],
-            "time": "2014-11-06 23:09:43"
+            "time": "2014-11-07 02:57:34"
         },
         {
             "name": "guzzle/guzzle",

@@ -2,17 +2,28 @@
 namespace Icecave\Chastity;
 
 use Icecave\Chastity\Exception\LockAcquisitionException;
+use Icecave\Chastity\Exception\LockNotAcquiredException;
 
-trait LockTrait
+/**
+ * Wraps an existing lock to provide reentrancy support.
+ */
+class ReentrantLock implements LockInterface
 {
+    /**
+     * @param LockInterface $lock The underlying lock.
+     */
+    public function __construct(LockInterface $lock)
+    {
+        $this->lock = $lock;
+        $this->count = 0;
+    }
+
     /**
      * Release this lock.
      */
     public function __destruct()
     {
-        while ($this->isAcquired()) {
-            $this->release();
-        }
+        $this->lock->release();
     }
 
     /**
@@ -20,7 +31,10 @@ trait LockTrait
      *
      * @return string The name of this lock.
      */
-    public abstract function name();
+    public function name()
+    {
+        return $this->lock->name();
+    }
 
     /**
      * Check if this lock has been acquired by this process.
@@ -36,19 +50,17 @@ trait LockTrait
      * Attempt to acquire this lock and throw an exception if the acquisition
      * is uncessuccessful.
      *
-     * @param integer|float|null $timeout How long to wait for lock acquisition.
+     * @param integer|float|null $timeout How long to wait for lock acquisition, or null to wait forever.
      *
      * @throws LockAcquisitionException if the lock can not be acquired.
      */
     public function acquire($timeout = null)
     {
-        if ($this->tryAcquire($timeout)) {
-            return;
+        if (!$this->count) {
+            $this->lock->acquire($timeout);
         }
 
-        throw new LockAcquisitionException(
-            $this->name()
-        );
+        ++$this->count;
     }
 
     /**
@@ -60,16 +72,13 @@ trait LockTrait
      */
     public function tryAcquire($timeout = null)
     {
-        // Lock is already acquired ...
-        if ($this->count) {
-            ++$this->count;
-
-        // Lock is successfully required for the first time ...
-        } elseif ($this->acquireLogic($timeout)) {
-            ++$this->count;
+        if (!$this->count && !$this->lock->tryAcquire($timeout)) {
+            return false;
         }
 
-        return $this->isAcquired();
+        ++$this->count;
+
+        return true;
     }
 
     /**
@@ -79,32 +88,13 @@ trait LockTrait
      */
     public function release()
     {
-        // Lock is already released ...
         if (0 === $this->count) {
-            return;
-
-        // Lock is still acquired ...
-        } elseif (--$this->count) {
-            return;
+            throw new LockNotAcquiredException($this->name());
+        } elseif (0 === --$this->count) {
+            $this->lock->release();
         }
-
-        // Lock is actually released ...
-        $this->releaseLogic();
     }
 
-    /**
-     * Acquire this lock.
-     *
-     * @param integer|float|null $timeout
-     *
-     * @return boolean
-     */
-    protected abstract function acquireLogic($timeout);
-
-    /**
-     * Release this lock.
-     */
-    protected abstract function releaseLogic();
-
-    private $count = 0;
+    private $lock;
+    private $count;
 }
