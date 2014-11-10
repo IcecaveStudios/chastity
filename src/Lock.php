@@ -27,11 +27,14 @@ class Lock implements LockInterface, LoggerAwareInterface
      */
     public function __destruct()
     {
-        if ($this->isAcquired) {
-            $this->driver->release(
-                $this->resource,
-                $this->token
-            );
+        if (!$this->isAcquired) {
+            return;
+        }
+
+        try {
+            $this->release();
+        } catch (LockNotAcquiredException $e) {
+            // ignore ...
         }
     }
 
