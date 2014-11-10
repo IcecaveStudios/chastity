@@ -5,9 +5,13 @@ use Icecave\Chastity\Driver\BlockingDriverInterface;
 use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockAlreadyAcquiredException;
 use Icecave\Chastity\Exception\LockNotAcquiredException;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-class Lock implements LockInterface
+class Lock implements LockInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     public function __construct(
         BlockingDriverInterface $driver,
         $resource,
@@ -94,12 +98,44 @@ class Lock implements LockInterface
             throw new LockAlreadyAcquiredException($this->resource);
         }
 
+        if ($this->logger) {
+            $this->logger->debug(
+                'Lock {token} acquiring lock on "{resource}" resource with {ttl} second TTL and {timeout} second timeout',
+                [
+                    'resource' => $this->resource,
+                    'token'    => $this->token,
+                    'ttl'      => $ttl,
+                    'timeout'  => $timeout,
+                ]
+            );
+        }
+
         $this->isAcquired = $this->driver->acquire(
             $this->resource,
             $this->token,
             $ttl,
             $timeout
         );
+
+        if ($this->logger) {
+            if ($this->isAcquired) {
+                $this->logger->debug(
+                    'Lock {token} acquired lock on "{resource}" resource',
+                    [
+                        'resource' => $this->resource,
+                        'token'    => $this->token,
+                    ]
+                );
+            } else {
+                $this->logger->debug(
+                    'Lock {token} could not acquire lock on "{resource}" resource',
+                    [
+                        'resource' => $this->resource,
+                        'token'    => $this->token,
+                    ]
+                );
+            }
+        }
 
         return $this->isAcquired;
     }
@@ -124,6 +160,15 @@ class Lock implements LockInterface
 
         if (!$this->isAcquired) {
             throw new LockNotAcquiredException($this->resource);
+        } elseif ($this->logger) {
+            $this->logger->debug(
+                'Lock {token} extended lock on "{resource}" resource by {ttl} second(s)',
+                [
+                    'resource' => $this->resource,
+                    'token'    => $this->token,
+                    'ttl'      => $ttl,
+                ]
+            );
         }
     }
 
@@ -139,6 +184,14 @@ class Lock implements LockInterface
             || !$this->driver->release($this->resource, $this->token)
         ) {
             throw new LockNotAcquiredException($this->resource);
+        } elseif ($this->logger) {
+            $this->logger->debug(
+                'Lock {token} released lock on "{resource}" resource',
+                [
+                    'resource' => $this->resource,
+                    'token'    => $this->token,
+                ]
+            );
         }
 
         $this->isAcquired = false;

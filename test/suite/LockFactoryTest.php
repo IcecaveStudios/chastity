@@ -9,12 +9,14 @@ use Icecave\Druid\Uuid;
 use Icecave\Druid\UuidGeneratorInterface;
 use Icecave\Druid\UuidInterface;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 class LockFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->driver = Phony::mock(BlockingDriverInterface::class);
+        $this->logger = Phony::mock(LoggerInterface::class);
         $this->uuidGenerator = Phony::mock(UuidGeneratorInterface::class);
         $this->uuid = Phony::mock(UuidInterface::class);
 
@@ -103,6 +105,34 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
                 '<resource>',
                 '<token>'
             ),
+            $lock
+        );
+
+        $this->assertFalse(
+            $lock->isAcquired()
+        );
+    }
+
+    public function testCreateWithLogger()
+    {
+        $this->factory->setLogger(
+            $this->logger->mock()
+        );
+
+        $lock = $this->factory->create('<resource>');
+
+        $expected = new Lock(
+            $this->driver->mock(),
+            '<resource>',
+            '<token>'
+        );
+
+        $expected->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->assertEquals(
+            $expected,
             $lock
         );
 

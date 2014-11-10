@@ -7,12 +7,14 @@ use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockAlreadyAcquiredException;
 use Icecave\Chastity\Exception\LockNotAcquiredException;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 class LockTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->driver = Phony::mock(BlockingDriverInterface::class);
+        $this->logger = Phony::mock(LoggerInterface::class);
 
         $this
             ->driver
@@ -295,6 +297,69 @@ class LockTest extends PHPUnit_Framework_TestCase
         $this->lock->tryAcquire($this->ttl);
     }
 
+    public function testTryAcquireLogging()
+    {
+        $this
+            ->driver
+            ->acquire
+            ->returns(false);
+
+        $this->lock->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->lock->tryAcquire($this->ttl, $this->timeout);
+
+        Phony::inOrder(
+            $this->logger->debug->calledWith(
+                'Lock {token} acquiring lock on "{resource}" resource with {ttl} second TTL and {timeout} second timeout',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                    'ttl'      => $this->ttl,
+                    'timeout'  => $this->timeout,
+                ]
+            ),
+            $this->driver->acquire->called(),
+            $this->logger->debug->calledWith(
+                'Lock {token} could not acquire lock on "{resource}" resource',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                ]
+            )
+        );
+    }
+
+    public function testTryAcquireFailureLogging()
+    {
+        $this->lock->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->lock->tryAcquire($this->ttl, $this->timeout);
+
+        Phony::inOrder(
+            $this->logger->debug->calledWith(
+                'Lock {token} acquiring lock on "{resource}" resource with {ttl} second TTL and {timeout} second timeout',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                    'ttl'      => $this->ttl,
+                    'timeout'  => $this->timeout,
+                ]
+            ),
+            $this->driver->acquire->called(),
+            $this->logger->debug->calledWith(
+                'Lock {token} acquired lock on "{resource}" resource',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                ]
+            )
+        );
+    }
+
     public function testExtend()
     {
         $this->lock->tryAcquire($this->ttl);
@@ -345,6 +410,29 @@ class LockTest extends PHPUnit_Framework_TestCase
         );
 
         $this->lock->extend($this->ttl);
+    }
+
+    public function testExtendLogging()
+    {
+        $this->lock->tryAcquire($this->ttl);
+
+        $this->lock->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->lock->extend($this->ttl);
+
+        Phony::inOrder(
+            $this->driver->extend->called(),
+            $this->logger->debug->calledWith(
+                'Lock {token} extended lock on "{resource}" resource by {ttl} second(s)',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                    'ttl'      => $this->ttl,
+                ]
+            )
+        );
     }
 
     public function testRelease()
@@ -398,5 +486,27 @@ class LockTest extends PHPUnit_Framework_TestCase
         );
 
         $this->lock->release();
+    }
+
+    public function testReleaseLogging()
+    {
+        $this->lock->tryAcquire($this->ttl);
+
+        $this->lock->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->lock->release();
+
+        Phony::inOrder(
+            $this->driver->release->called(),
+            $this->logger->debug->calledWith(
+                'Lock {token} released lock on "{resource}" resource',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                ]
+            )
+        );
     }
 }

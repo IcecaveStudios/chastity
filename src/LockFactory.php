@@ -7,9 +7,13 @@ use Icecave\Chastity\Driver\DriverInterface;
 use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Druid\UuidGeneratorInterface;
 use Icecave\Druid\UuidVersion4Generator;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-class LockFactory implements LockFactoryInterface
+class LockFactory implements LockFactoryInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     public function __construct(
         DriverInterface $driver,
         UuidGeneratorInterface $uuidGenerator = null
@@ -62,11 +66,17 @@ class LockFactory implements LockFactoryInterface
             ->generate()
             ->string();
 
-        return new Lock(
+        $lock = new Lock(
             $this->driver,
             $resource,
             $token
         );
+
+        if ($this->logger) {
+            $lock->setLogger($this->logger);
+        }
+
+        return $lock;
     }
 
     /**
