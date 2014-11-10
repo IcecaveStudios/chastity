@@ -111,7 +111,46 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDefaultTtl()
+    {
+        $this->assertSame(
+            600,
+            $this->factory->defaultTtl()
+        );
+
+        $this->factory->setDefaultTtl(300);
+
+        $this->assertSame(
+            300,
+            $this->factory->defaultTtl()
+        );
+    }
+
     public function testAcquire()
+    {
+        $lock = $this->factory->acquire('<resource>');
+
+        $this->assertInstanceOf(
+            Lock::class,
+            $lock
+        );
+
+        $this->assertTrue(
+            $lock->isAcquired()
+        );
+
+        $this
+            ->driver
+            ->acquire
+            ->calledWith(
+                '<resource>',
+                '<token>',
+                $this->factory->defaultTtl(),
+                INF
+            );
+    }
+
+    public function testAcquireWithTtl()
     {
         $lock = $this->factory->acquire('<resource>', $this->ttl);
 
@@ -160,6 +199,30 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     public function testTryAcquire()
+    {
+        $lock = $this->factory->tryAcquire('<resource>');
+
+        $this->assertInstanceOf(
+            Lock::class,
+            $lock
+        );
+
+        $this->assertTrue(
+            $lock->isAcquired()
+        );
+
+        $this
+            ->driver
+            ->acquire
+            ->calledWith(
+                '<resource>',
+                '<token>',
+                $this->factory->defaultTtl(),
+                INF
+            );
+    }
+
+    public function testTryAcquireWithTtl()
     {
         $lock = $this->factory->tryAcquire('<resource>', $this->ttl);
 
@@ -214,7 +277,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             ->acquire
             ->returns(false);
 
-        $lock = $this->factory->tryAcquire('<resource>', $this->ttl);
+        $lock = $this->factory->tryAcquire('<resource>');
 
         $this->assertNull(
             $lock
@@ -226,7 +289,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             ->calledWith(
                 '<resource>',
                 '<token>',
-                $this->ttl,
+                $this->factory->defaultTtl(),
                 INF
             );
     }
