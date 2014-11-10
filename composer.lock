@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0804c402c1331fb7d6795aae408443a7",
+    "hash": "01d610c63365f853c66a3a1ea8e8c221",
     "packages": [
         {
             "name": "icecave/druid",
@@ -69,16 +69,16 @@
         },
         {
             "name": "icecave/interlude",
-            "version": "dev-develop",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IcecaveStudios/interlude.git",
-                "reference": "02382eab3d15d0409b026820fe66d9c6cad07031"
+                "reference": "e347e6ed1f73b8949f171e46bb56ff4559a5d07d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/interlude/zipball/02382eab3d15d0409b026820fe66d9c6cad07031",
-                "reference": "02382eab3d15d0409b026820fe66d9c6cad07031",
+                "url": "https://api.github.com/repos/IcecaveStudios/interlude/zipball/e347e6ed1f73b8949f171e46bb56ff4559a5d07d",
+                "reference": "e347e6ed1f73b8949f171e46bb56ff4559a5d07d",
                 "shasum": ""
             },
             "require": {
@@ -121,7 +121,7 @@
                 "timeout",
                 "ttl"
             ],
-            "time": "2014-11-10 05:52:54"
+            "time": "2014-11-10 08:16:17"
         },
         {
             "name": "icecave/isolator",
@@ -1484,7 +1484,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "icecave/interlude": 20,
         "eloquent/phony": 20
     },
     "prefer-stable": false,

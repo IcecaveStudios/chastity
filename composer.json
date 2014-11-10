@@ -21,7 +21,7 @@
     "require": {
         "php": ">=5.5",
         "icecave/druid": "~1",
-        "icecave/interlude": "~0.1.0@dev",
+        "icecave/interlude": "~0.1.0",
         "icecave/isolator": "~3",
         "predis/predis": "~1"
     },
