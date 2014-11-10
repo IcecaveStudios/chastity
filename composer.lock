@@ -4,31 +4,28 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d214c94423bdc049013b15e9ed404742",
+    "hash": "0804c402c1331fb7d6795aae408443a7",
     "packages": [
         {
             "name": "icecave/druid",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IcecaveStudios/druid.git",
-                "reference": "7f4e4f9ef54760b6c89b6ece95ce90f43b5d3c7d"
+                "reference": "9cbb2768c6f049ac7ba577cbd821cb10425eb628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/druid/zipball/7f4e4f9ef54760b6c89b6ece95ce90f43b5d3c7d",
-                "reference": "7f4e4f9ef54760b6c89b6ece95ce90f43b5d3c7d",
+                "url": "https://api.github.com/repos/IcecaveStudios/druid/zipball/9cbb2768c6f049ac7ba577cbd821cb10425eb628",
+                "reference": "9cbb2768c6f049ac7ba577cbd821cb10425eb628",
                 "shasum": ""
             },
             "require": {
-                "icecave/isolator": "~2",
+                "icecave/isolator": "~2|~3",
                 "php": ">=5.3"
             },
             "require-dev": {
                 "icecave/archer": "~1"
-            },
-            "suggest": {
-                "eloquent/asplode": "Drop-in exception-based error handling."
             },
             "type": "library",
             "extra": {
@@ -68,20 +65,76 @@
                 "universally",
                 "uuid"
             ],
-            "time": "2014-09-09 04:46:51"
+            "time": "2014-11-08 08:34:19"
         },
         {
-            "name": "icecave/isolator",
-            "version": "2.3.0",
+            "name": "icecave/interlude",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/IcecaveStudios/isolator.git",
-                "reference": "97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5"
+                "url": "https://github.com/IcecaveStudios/interlude.git",
+                "reference": "8c9be1cb7e1a31c27f5defc138e9af74921e5a28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5",
-                "reference": "97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5",
+                "url": "https://api.github.com/repos/IcecaveStudios/interlude/zipball/8c9be1cb7e1a31c27f5defc138e9af74921e5a28",
+                "reference": "8c9be1cb7e1a31c27f5defc138e9af74921e5a28",
+                "shasum": ""
+            },
+            "require": {
+                "icecave/isolator": "~3",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "eloquent/phony": "~0.1.0@dev",
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Icecave\\Interlude\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Harris",
+                    "email": "james.harris@icecave.com.au",
+                    "homepage": "https://github.com/jmalloc"
+                }
+            ],
+            "description": "Emulated timeouts for synchronous operations.",
+            "homepage": "https://github.com/IcecaveStudios/interlude",
+            "keywords": [
+                "async",
+                "repeat",
+                "retry",
+                "sync",
+                "timeout",
+                "ttl"
+            ],
+            "time": "2014-11-10 02:06:59"
+        },
+        {
+            "name": "icecave/isolator",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IcecaveStudios/isolator.git",
+                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
+                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
                 "shasum": ""
             },
             "require": {
@@ -90,14 +143,19 @@
             "require-dev": {
                 "icecave/archer": "~1"
             },
-            "suggest": {
-                "eloquent/asplode": "Drop-in exception-based error handling."
-            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Icecave\\Isolator\\": "src"
-                }
+                },
+                "files": [
+                    "src/register-autoloader.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -113,14 +171,15 @@
             "description": "Dependency injection for global functions.",
             "homepage": "https://github.com/IcecaveStudios/isolator",
             "keywords": [
+                "Double",
                 "fake",
                 "mock",
-                "phake",
                 "phpunit",
+                "stub",
                 "test",
                 "unit"
             ],
-            "time": "2014-08-12 03:16:11"
+            "time": "2014-10-20 23:50:20"
         },
         {
             "name": "predis/predis",
@@ -244,12 +303,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eloquent/phony.git",
-                "reference": "b9d6787c36209fb642122b5ed06912477e9a01f3"
+                "reference": "658d159790f50548919e86398877974d1d8d648f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eloquent/phony/zipball/b9d6787c36209fb642122b5ed06912477e9a01f3",
-                "reference": "b9d6787c36209fb642122b5ed06912477e9a01f3",
+                "url": "https://api.github.com/repos/eloquent/phony/zipball/658d159790f50548919e86398877974d1d8d648f",
+                "reference": "658d159790f50548919e86398877974d1d8d648f",
                 "shasum": ""
             },
             "require": {
@@ -308,7 +367,7 @@
                 "stubbing",
                 "test"
             ],
-            "time": "2014-11-07 02:57:34"
+            "time": "2014-11-09 11:52:53"
         },
         {
             "name": "guzzle/guzzle",
@@ -1425,6 +1484,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "icecave/interlude": 20,
         "eloquent/phony": 20
     },
     "prefer-stable": false,

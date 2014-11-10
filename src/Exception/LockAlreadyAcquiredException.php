@@ -6,10 +6,10 @@ use LogicException;
 
 class LockAlreadyAcquiredException extends LogicException
 {
-    public function __construct($name, Exception $previous = null)
+    public function __construct($resource, Exception $previous = null)
     {
         parent::__construct(
-            'Lock has already been acquired: ' . $name . '.',
+            'Lock has already been acquired: ' . $resource . '.',
             0,
             $previous
         );

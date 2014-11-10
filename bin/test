@@ -4,9 +4,21 @@ error_reporting(-1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$c = new Predis\Client();
-$d = new Icecave\Chastity\Redis\RedisDriver($c, new Icecave\Druid\UuidVersion4Generator, 15);
-$f = new Icecave\Chastity\LockFactory($d);
+use Icecave\Chastity\Driver\Redis\RedisDriver;
+use Icecave\Chastity\LockFactory;
+use Icecave\Druid\UuidVersion4Generator;
+use Predis\Client;
 
-$l = $f->acquire('foo');
-sleep(3);
+$factory = new LockFactory(
+    new RedisDriver(
+        new Client(),
+        new UuidVersion4Generator()
+    )
+);
+
+echo 'Waiting for lock ...' . PHP_EOL;
+$lock = $factory->acquire('foo', 10, 0);
+echo 'Lock acquired, sleeping ...' . PHP_EOL;
+sleep(5);
+echo 'Done!' . PHP_EOL;
+

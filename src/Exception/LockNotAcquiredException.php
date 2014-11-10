@@ -6,10 +6,10 @@ use LogicException;
 
 class LockNotAcquiredException extends LogicException
 {
-    public function __construct($name, Exception $previous = null)
+    public function __construct($resource, Exception $previous = null)
     {
         parent::__construct(
-            'Lock has not been acquired: ' . $name . '.',
+            'Lock has not been acquired: ' . $resource . '.',
             0,
             $previous
         );

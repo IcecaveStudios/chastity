@@ -23,41 +23,55 @@ class ReentrantLock implements LockInterface
      */
     public function __destruct()
     {
-        $this->lock->release();
+        try {
+            $this->lock->release();
+        } catch (LockNotAcquiredException $e) {
+            // ignore ...
+        }
     }
 
     /**
-     * Get the name of this lock.
+     * Get the resource to which this lock applies.
      *
-     * @return string The name of this lock.
+     * @return string The resource to which this lock applies.
      */
-    public function name()
+    public function resource()
     {
-        return $this->lock->name();
+        return $this->lock->resource();
     }
 
     /**
-     * Check if this lock has been acquired by this process.
+     * Check if this lock has been acquired.
      *
      * @return boolean True if this lock is currently acquired by this process.
      */
     public function isAcquired()
     {
-        return 0 !== $this->count;
+        if (!$this->count) {
+            return false;
+        } elseif ($this->lock->isAcquired()) {
+            return true;
+        }
+
+        $this->count = 0;
+
+        return false;
     }
 
     /**
-     * Attempt to acquire this lock and throw an exception if the acquisition
-     * is uncessuccessful.
+     * Attempt to acquire this lock and throw an exception if acquisition
+     * is unsuccessful.
      *
-     * @param integer|float|null $timeout How long to wait for lock acquisition, or null to wait forever.
+     * @param integer|float $ttl     How long the lock should persist, in seconds.
+     * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @throws LockAcquisitionException if the lock can not be acquired.
+     * @throws LockAcquisitionException     if the lock can not be acquired.
+     * @throws LockAlreadyAcquiredException if the lock is already acquired.
      */
-    public function acquire($timeout = null)
+    public function acquire($ttl, $timeout = INF)
     {
         if (!$this->count) {
-            $this->lock->acquire($timeout);
+            $this->lock->acquire($ttl, $timeout);
         }
 
         ++$this->count;
@@ -66,13 +80,18 @@ class ReentrantLock implements LockInterface
     /**
      * Attempt to acquire this lock.
      *
-     * @param integer|float|null $timeout How long to wait for lock acquisition.
+     * @param integer|float $ttl     How long the lock should persist, in seconds.
+     * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @throws boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                      True if the lock is acquired; otherwise, false.
+     * @throws LockAlreadyAcquiredException if the lock is already acquired.
      */
-    public function tryAcquire($timeout = null)
+    public function tryAcquire($ttl, $timeout = INF)
     {
-        if (!$this->count && !$this->lock->tryAcquire($timeout)) {
+        if (
+            !$this->count
+            && !$this->lock->tryAcquire($ttl, $timeout)
+        ) {
             return false;
         }
 
@@ -82,14 +101,27 @@ class ReentrantLock implements LockInterface
     }
 
     /**
-     * Release this lock immediately.
+     * Extend the TTL of this lock.
      *
-     * A lock must be released the same number of times it has been acquired.
+     * @param integer|float $ttl How long the lock should persist, in seconds.
+     *
+     * @return boolean                  True if the lock is acquired and has been extended; otherwise, false.
+     * @throws LockNotAcquiredException if the lock has not been acquired.
+     */
+    public function extend($ttl)
+    {
+        $this->lock->extend($ttl);
+    }
+
+    /**
+     * Release this lock.
+     *
+     * @throws LockNotAcquiredException if the lock has not been acquired.
      */
     public function release()
     {
         if (0 === $this->count) {
-            throw new LockNotAcquiredException($this->name());
+            throw new LockNotAcquiredException($this->lock->resource());
         } elseif (0 === --$this->count) {
             $this->lock->release();
         }

@@ -1,66 +1,49 @@
 <?php
 namespace Icecave\Chastity\Driver\Redis;
 
-use Icecave\Druid\UuidGeneratorInterface;
 use Icecave\Chastity\Driver\DriverInterface;
 use InvalidArgumentException;
 use Predis\ClientInterface;
 
 class RedisDriver implements DriverInterface
 {
-    public function __construct(
-        ClientInterface $redisClient,
-        UuidGeneratorInterface $uuidGenerator
-    ) {
-        $this->redisClient   = $redisClient;
-        $this->uuidGenerator = $uuidGenerator;
+    public function __construct(ClientInterface $redisClient)
+    {
+        $this->redisClient = $redisClient;
     }
 
     /**
      * Acquire a lock on the given resource.
      *
-     * The return value is an opaque "token" representing the acquired lock.
-     *
      * @param string        $resource The resource to lock.
+     * @param string        $token    The unique token representing the acquisition request.
      * @param integer|float $ttl      How long the lock should persist, in seconds.
-     * @param integer|float $timeout  The maximum time to wait for the lock to be acquired, in seconds.
      *
-     * @return string|null The acquisition token, or null if acquisition failed.
+     * @return boolean True if the lock is acquired; otherwise, false.
      */
-    public function acquire($resource, $ttl, $timeout)
+    public function acquire($resource, $token, $ttl)
     {
-        $token = $this
-            ->uuidGenerator
-            ->generate()
-            ->string();
-
-        $result = $this->redisClient->set(
-            $this->key($resource),
+        return (bool) $this->redisClient->set(
+            $this->generateKey($resource),
             $token,
             'PX',
-            round($ttl * 1000),
+            $this->convertTimeToLive($ttl),
             'NX'
         );
-
-        if ($result) {
-            return $token;
-        }
-
-        return null;
     }
 
     /**
      * Check if the given token still represents an acquired lock.
      *
      * @param string $resource The locked resource.
-     * @param string $token    The token representing the acquired lock.
+     * @param string $token    The token originally passed to acquire().
      *
      * @return boolean True if the lock is acquired; otherwise, false.
      */
     public function isAcquired($resource, $token)
     {
         return $token === $this->redisClient->get(
-            $this->key($resource)
+            $this->generateKey($resource)
         );
     }
 
@@ -68,7 +51,7 @@ class RedisDriver implements DriverInterface
      * Extend the TTL of a lock that has already been acquired.
      *
      * @param string        $resource The locked resource.
-     * @param string        $token    The token representing the acquired lock.
+     * @param string        $token    The token originally passed to acquire().
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
      * @return boolean True if the lock is acquired and has been extended; otherwise, false.
@@ -85,9 +68,9 @@ class RedisDriver implements DriverInterface
         return $this->redisClient->evalsha(
             $this->extendHash,
             1,
-            $this->key($resource),
+            $this->generateKey($resource),
             $token,
-            round($ttl * 1000)
+            $this->convertTimeToLive($ttl)
         );
     }
 
@@ -95,7 +78,7 @@ class RedisDriver implements DriverInterface
      * Release a lock.
      *
      * @param string $resource The locked resource.
-     * @param string $token    The token representing the acquired lock.
+     * @param string $token    The token originally passed to acquire().
      *
      * @return boolean True if the lock was previously acquired; otherwise, false.
      */
@@ -111,18 +94,28 @@ class RedisDriver implements DriverInterface
         return $this->redisClient->evalsha(
             $this->releaseHash,
             1,
-            $this->key($resource),
+            $this->generateKey($resource),
             $token
         );
     }
 
-    private function key($resource)
+    private function generateKey($resource)
     {
         return 'chastity:' . $resource;
     }
 
+    private function convertTimeToLive($ttl)
+    {
+        $ttl = round($ttl * 1000);
+
+        if ($ttl <= 0) {
+            throw new InvalidArgumentException('TTL can not be zero.');
+        }
+
+        return $ttl;
+    }
+
     private $redisClient;
-    private $uuidGenerator;
     private $extendHash;
     private $releaseHash;
 }

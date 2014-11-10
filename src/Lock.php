@@ -1,20 +1,21 @@
 <?php
 namespace Icecave\Chastity;
 
+use Icecave\Chastity\Driver\BlockingDriverInterface;
 use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockAlreadyAcquiredException;
 use Icecave\Chastity\Exception\LockNotAcquiredException;
 
 class Lock implements LockInterface
 {
-    /**
-     * @param DriverInterface $driver   The driver used to acquire/release locks.
-     * @param string          $resource The resource.
-     */
-    public function __construct(DriverInterface $driver, $resource)
-    {
+    public function __construct(
+        BlockingDriverInterface $driver,
+        $resource,
+        $token
+    ) {
         $this->driver = $driver;
         $this->resource = $resource;
+        $this->token = $token;
     }
 
     /**
@@ -22,7 +23,7 @@ class Lock implements LockInterface
      */
     public function __destruct()
     {
-        if ($this->token) {
+        if ($this->isAcquired) {
             $this->driver->release(
                 $this->resource,
                 $this->token
@@ -47,22 +48,16 @@ class Lock implements LockInterface
      */
     public function isAcquired()
     {
-        if (!$this->token) {
+        if (!$this->isAcquired) {
             return false;
         }
 
-        $isAcquired = $this->driver->isAcquired(
+        $this->isAcquired = $this->driver->isAcquired(
             $this->resource,
             $this->token
         );
 
-        if ($isAcquired) {
-            return true;
-        }
-
-        $this->token = null;
-
-        return false;
+        return $this->isAcquired;
     }
 
     /**
@@ -99,13 +94,14 @@ class Lock implements LockInterface
             throw new LockAlreadyAcquiredException($this->resource);
         }
 
-        $this->token = $this->driver->acquire(
+        $this->isAcquired = $this->driver->acquire(
             $this->resource,
+            $this->token,
             $ttl,
             $timeout
         );
 
-        return (bool) $this->token;
+        return $this->isAcquired;
     }
 
     /**
@@ -118,15 +114,17 @@ class Lock implements LockInterface
      */
     public function extend($ttl)
     {
-        if (!$this->token) {
-            throw new LockNotAcquiredException($this->resource);
-        } elseif ($this->driver->extend($this->token, $ttl)) {
-            return;
+        if ($this->isAcquired) {
+            $this->isAcquired = $this->driver->extend(
+                $this->resource,
+                $this->token,
+                $ttl
+            );
         }
 
-        $this->token = null;
-
-        throw new LockNotAcquiredException($this->resource);
+        if (!$this->isAcquired) {
+            throw new LockNotAcquiredException($this->resource);
+        }
     }
 
     /**
@@ -136,16 +134,18 @@ class Lock implements LockInterface
      */
     public function release()
     {
-        if (!$this->token) {
-            throw new LockNotAcquiredException($this->resource);
-        } elseif (!$this->driver->release($this->resource, $this->token)) {
+        if (
+            !$this->isAcquired
+            || !$this->driver->release($this->resource, $this->token)
+        ) {
             throw new LockNotAcquiredException($this->resource);
         }
 
-        $this->token = null;
+        $this->isAcquired = false;
     }
 
     private $driver;
     private $resource;
     private $token;
+    private $isAcquired;
 }

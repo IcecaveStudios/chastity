@@ -6,56 +6,139 @@ use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockNotAcquiredException;
 use PHPUnit_Framework_TestCase;
 
-class LockTraitTest extends PHPUnit_Framework_TestCase
+class ReentrantLockTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->underlyingLock = Phony::mock(LockInterface::class);
+        $this->innerLock = Phony::mock(LockInterface::class);
 
         $this
-            ->underlyingLock
-            ->name
-            ->returns('lock-name');
+            ->innerLock
+            ->resource
+            ->returns('<resource>');
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->tryAcquire
             ->returns(true);
 
+        $this
+            ->innerLock
+            ->isAcquired
+            ->returns(true);
+
+        $this->ttl = 10;
+        $this->timeout = 30;
+
         $this->lock = new ReentrantLock(
-            $this->underlyingLock->mock()
+            $this->innerLock->mock()
         );
     }
 
     public function testDestruct()
     {
-        $this->lock->acquire();
+        $this->lock->tryAcquire($this->ttl);
         $this->lock->__destruct();
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->release
             ->once()
             ->called();
     }
 
-    public function testName()
+    public function testResource()
     {
         $this->assertSame(
-            'lock-name',
-            $this->lock->name()
+            '<resource>',
+            $this->lock->resource()
         );
+    }
+
+    public function testIsAcquired()
+    {
+        $this->assertFalse(
+            $this->lock->isAcquired()
+        );
+
+        // The internal state should indicate that no lock is acquired and hence
+        // the driver will not be asked ...
+        $this
+            ->innerLock
+            ->isAcquired
+            ->never()
+            ->called();
+
+        $this->lock->tryAcquire($this->ttl);
+
+        $this->assertTrue(
+            $this->lock->isAcquired()
+        );
+
+        // The internal state should indicate that the lock has been acquired,
+        // so the driver is asked to ensure that lock is still held ...
+        $this
+            ->innerLock
+            ->isAcquired
+            ->once()
+            ->called();
+    }
+
+    public function testIsAcquiredAfterFailedAcquisition()
+    {
+        $this
+            ->innerLock
+            ->tryAcquire
+            ->returns(false);
+
+        $this->lock->tryAcquire($this->ttl);
+
+        $this->assertFalse(
+            $this->lock->isAcquired()
+        );
+
+        // The internal state should indicate that no lock is acquired and hence
+        // the driver will not be asked ...
+        $this
+            ->innerLock
+            ->isAcquired
+            ->never()
+            ->called();
+    }
+
+    public function testIsAcquiredWhenLockHasExpired()
+    {
+        $this
+            ->innerLock
+            ->isAcquired
+            ->returns(false);
+
+        $this->lock->tryAcquire($this->ttl);
+
+        $this->assertFalse(
+            $this->lock->isAcquired()
+        );
+
+        $this->assertFalse(
+            $this->lock->isAcquired()
+        );
+
+        $this
+            ->innerLock
+            ->isAcquired
+            ->once()
+            ->called();
     }
 
     public function testAcquire()
     {
-        $this->lock->acquire();
+        $this->lock->acquire($this->ttl);
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->acquire
             ->once()
-            ->calledWith(null);
+            ->calledWith($this->ttl, INF);
 
         $this->assertTrue(
             $this->lock->isAcquired()
@@ -64,13 +147,13 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
 
     public function testAcquireWithTimeout()
     {
-        $this->lock->acquire(123);
+        $this->lock->acquire($this->ttl, $this->timeout);
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->acquire
             ->once()
-            ->calledWith(123);
+            ->calledWith($this->ttl, $this->timeout);
 
         $this->assertTrue(
             $this->lock->isAcquired()
@@ -80,19 +163,19 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
     public function testAcquireFailure()
     {
         $this
-            ->underlyingLock
+            ->innerLock
             ->acquire
             ->throws(
-                new LockAcquisitionException('lock-name')
+                new LockAcquisitionException('<resource>')
             );
 
         $this->setExpectedException(
             LockAcquisitionException::class,
-            'Unable to acquire lock: lock-name.'
+            'Unable to acquire lock: <resource>.'
         );
 
         try {
-            $this->lock->acquire();
+            $this->lock->acquire($this->ttl);
         } catch (LockAcquisitionException $e) {
             $this->assertFalse(
                 $this->lock->isAcquired()
@@ -104,13 +187,13 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
 
     public function testTryAcquire()
     {
-        $isAcquired = $this->lock->tryAcquire();
+        $isAcquired = $this->lock->tryAcquire($this->ttl);
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->tryAcquire
             ->once()
-            ->calledWith(null);
+            ->calledWith($this->ttl, INF);
 
         $this->assertTrue(
             $isAcquired
@@ -123,13 +206,13 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
 
     public function testTryAcquireWithTimeout()
     {
-        $isAcquired = $this->lock->tryAcquire(123);
+        $isAcquired = $this->lock->tryAcquire($this->ttl, $this->timeout);
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->tryAcquire
             ->once()
-            ->calledWith(123);
+            ->calledWith($this->ttl, $this->timeout);
 
         $this->assertTrue(
             $isAcquired
@@ -143,22 +226,32 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
     public function testTryAcquireFailure()
     {
         $this
-            ->underlyingLock
+            ->innerLock
             ->tryAcquire
             ->returns(false);
 
         $this->assertFalse(
-            $this->lock->tryAcquire()
+            $this->lock->tryAcquire($this->ttl)
         );
+    }
+
+    public function testExtend()
+    {
+        $this->lock->extend($this->ttl);
+
+        $this
+            ->innerLock
+            ->extend
+            ->calledWith($this->ttl);
     }
 
     public function testRelease()
     {
-        $this->lock->tryAcquire();
+        $this->lock->tryAcquire($this->ttl);
         $this->lock->release();
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->release
             ->once()
             ->called();
@@ -172,7 +265,7 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(
             LockNotAcquiredException::class,
-            'Lock has not been acquired: lock-name.'
+            'Lock has not been acquired: <resource>.'
         );
 
         $this->lock->release();
@@ -182,21 +275,21 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
     {
         // First acquisition ...
         $this->assertTrue(
-            $this->lock->tryAcquire()
+            $this->lock->tryAcquire($this->ttl)
         );
         $this->assertTrue(
             $this->lock->isAcquired()
         );
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->tryAcquire
             ->once()
-            ->calledWith(null);
+            ->calledWith($this->ttl, INF);
 
         // Second acquisition ...
         $this->assertTrue(
-            $this->lock->tryAcquire()
+            $this->lock->tryAcquire($this->ttl)
         );
         $this->assertTrue(
             $this->lock->isAcquired()
@@ -204,7 +297,7 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
 
         // Third acquisition ...
         // Note use of acquire() instead of tryAcquire(), they must be able to be mixed in this manner.
-        $this->lock->acquire();
+        $this->lock->acquire($this->ttl);
 
         $this->assertTrue(
             $this->lock->isAcquired()
@@ -213,13 +306,13 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
         // Even after third acquisition the lock is only actually acquried
         // once ...
         $this
-            ->underlyingLock
+            ->innerLock
             ->tryAcquire
             ->once()
             ->called();
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->acquire
             ->never()
             ->called();
@@ -228,7 +321,7 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
         $this->lock->release();
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->release
             ->never()
             ->called();
@@ -241,7 +334,7 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
         $this->lock->release();
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->release
             ->never()
             ->called();
@@ -254,7 +347,7 @@ class LockTraitTest extends PHPUnit_Framework_TestCase
         $this->lock->release();
 
         $this
-            ->underlyingLock
+            ->innerLock
             ->release
             ->once()
             ->called();

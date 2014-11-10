@@ -6,10 +6,10 @@ use RuntimeException;
 
 class LockAcquisitionException extends RuntimeException
 {
-    public function __construct($name, Exception $previous = null)
+    public function __construct($resource, Exception $previous = null)
     {
         parent::__construct(
-            'Unable to acquire lock: ' . $name . '.',
+            'Unable to acquire lock: ' . $resource . '.',
             0,
             $previous
         );

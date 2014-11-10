@@ -1,12 +1,30 @@
 <?php
 namespace Icecave\Chastity;
 
+use Icecave\Chastity\Driver\BlockingAdaptor;
+use Icecave\Chastity\Driver\BlockingDriverInterface;
+use Icecave\Chastity\Driver\DriverInterface;
+use Icecave\Druid\UuidGeneratorInterface;
+use Icecave\Druid\UuidVersion4Generator;
+
 class LockFactory implements LockFactoryInterface
 {
-    public function __construct(DriverInterface $driver)
-    {
+    public function __construct(
+        DriverInterface $driver,
+        UuidGeneratorInterface $uuidGenerator = null
+    ) {
+        if (!$driver instanceof BlockingDriverInterface) {
+            $driver = new BlockingAdaptor($driver);
+        }
+
+        if (null === $uuidGenerator) {
+            $uuidGenerator = new UuidVersion4Generator;
+        }
+
         $this->driver = $driver;
+        $this->uuidGenerator = $uuidGenerator;
     }
+
     /**
      * Create a lock object for the given resource.
      *
@@ -16,9 +34,15 @@ class LockFactory implements LockFactoryInterface
      */
     public function create($resource)
     {
+        $token = $this
+            ->uuidGenerator
+            ->generate()
+            ->string();
+
         return new Lock(
             $this->driver,
-            $resource
+            $resource,
+            $token
         );
     }
 
@@ -36,11 +60,13 @@ class LockFactory implements LockFactoryInterface
      */
     public function acquire($resource, $ttl, $timeout = INF)
     {
-        $lock = $this->create($name);
+        $lock = $this->create($resource);
+
         $lock->acquire($ttl, $timeout);
 
         return $lock;
     }
 
     private $driver;
+    private $uuidGenerator;
 }
