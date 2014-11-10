@@ -100,7 +100,7 @@ class Lock implements LockInterface, LoggerAwareInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Lock {token} acquiring lock on "{resource}" resource with {ttl} second TTL and {timeout} second timeout',
+                'Resource "{resource}" lock request from {token} with {ttl} second TTL and {timeout} second timeout',
                 [
                     'resource' => $this->resource,
                     'token'    => $this->token,
@@ -120,7 +120,7 @@ class Lock implements LockInterface, LoggerAwareInterface
         if ($this->logger) {
             if ($this->isAcquired) {
                 $this->logger->debug(
-                    'Lock {token} acquired lock on "{resource}" resource',
+                    'Resource "{resource}" successfully locked by {token}',
                     [
                         'resource' => $this->resource,
                         'token'    => $this->token,
@@ -128,7 +128,7 @@ class Lock implements LockInterface, LoggerAwareInterface
                 );
             } else {
                 $this->logger->debug(
-                    'Lock {token} could not acquire lock on "{resource}" resource',
+                    'Resource "{resource}" could not be locked by {token}',
                     [
                         'resource' => $this->resource,
                         'token'    => $this->token,
@@ -162,7 +162,7 @@ class Lock implements LockInterface, LoggerAwareInterface
             throw new LockNotAcquiredException($this->resource);
         } elseif ($this->logger) {
             $this->logger->debug(
-                'Lock {token} extended lock on "{resource}" resource by {ttl} second(s)',
+                'Resource "{resource}" lock extended by {token} with {ttl} second TTL',
                 [
                     'resource' => $this->resource,
                     'token'    => $this->token,
@@ -186,7 +186,7 @@ class Lock implements LockInterface, LoggerAwareInterface
             throw new LockNotAcquiredException($this->resource);
         } elseif ($this->logger) {
             $this->logger->debug(
-                'Lock {token} released lock on "{resource}" resource',
+                'Resource "{resource}" released by {token}',
                 [
                     'resource' => $this->resource,
                     'token'    => $this->token,

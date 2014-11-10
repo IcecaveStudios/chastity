@@ -299,6 +299,35 @@ class LockTest extends PHPUnit_Framework_TestCase
 
     public function testTryAcquireLogging()
     {
+        $this->lock->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->lock->tryAcquire($this->ttl, $this->timeout);
+
+        Phony::inOrder(
+            $this->logger->debug->calledWith(
+                'Resource "{resource}" lock request from {token} with {ttl} second TTL and {timeout} second timeout',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                    'ttl'      => $this->ttl,
+                    'timeout'  => $this->timeout,
+                ]
+            ),
+            $this->driver->acquire->called(),
+            $this->logger->debug->calledWith(
+                'Resource "{resource}" successfully locked by {token}',
+                [
+                    'resource' => '<resource>',
+                    'token'    => '<token>',
+                ]
+            )
+        );
+    }
+
+    public function testTryAcquireFailureLogging()
+    {
         $this
             ->driver
             ->acquire
@@ -312,7 +341,7 @@ class LockTest extends PHPUnit_Framework_TestCase
 
         Phony::inOrder(
             $this->logger->debug->calledWith(
-                'Lock {token} acquiring lock on "{resource}" resource with {ttl} second TTL and {timeout} second timeout',
+                'Resource "{resource}" lock request from {token} with {ttl} second TTL and {timeout} second timeout',
                 [
                     'resource' => '<resource>',
                     'token'    => '<token>',
@@ -322,36 +351,7 @@ class LockTest extends PHPUnit_Framework_TestCase
             ),
             $this->driver->acquire->called(),
             $this->logger->debug->calledWith(
-                'Lock {token} could not acquire lock on "{resource}" resource',
-                [
-                    'resource' => '<resource>',
-                    'token'    => '<token>',
-                ]
-            )
-        );
-    }
-
-    public function testTryAcquireFailureLogging()
-    {
-        $this->lock->setLogger(
-            $this->logger->mock()
-        );
-
-        $this->lock->tryAcquire($this->ttl, $this->timeout);
-
-        Phony::inOrder(
-            $this->logger->debug->calledWith(
-                'Lock {token} acquiring lock on "{resource}" resource with {ttl} second TTL and {timeout} second timeout',
-                [
-                    'resource' => '<resource>',
-                    'token'    => '<token>',
-                    'ttl'      => $this->ttl,
-                    'timeout'  => $this->timeout,
-                ]
-            ),
-            $this->driver->acquire->called(),
-            $this->logger->debug->calledWith(
-                'Lock {token} acquired lock on "{resource}" resource',
+                'Resource "{resource}" could not be locked by {token}',
                 [
                     'resource' => '<resource>',
                     'token'    => '<token>',
@@ -425,7 +425,7 @@ class LockTest extends PHPUnit_Framework_TestCase
         Phony::inOrder(
             $this->driver->extend->called(),
             $this->logger->debug->calledWith(
-                'Lock {token} extended lock on "{resource}" resource by {ttl} second(s)',
+                'Resource "{resource}" lock extended by {token} with {ttl} second TTL',
                 [
                     'resource' => '<resource>',
                     'token'    => '<token>',
@@ -501,7 +501,7 @@ class LockTest extends PHPUnit_Framework_TestCase
         Phony::inOrder(
             $this->driver->release->called(),
             $this->logger->debug->calledWith(
-                'Lock {token} released lock on "{resource}" resource',
+                'Resource "{resource}" released by {token}',
                 [
                     'resource' => '<resource>',
                     'token'    => '<token>',
