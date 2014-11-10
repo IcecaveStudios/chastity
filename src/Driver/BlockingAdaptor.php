@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Chastity\Driver;
 
+use Icecave\Interlude\Exception\TimeoutException;
 use Icecave\Interlude\Invoker;
 use Icecave\Interlude\InvokerInterface;
 
@@ -77,7 +78,7 @@ class BlockingAdaptor implements BlockingDriverInterface
      */
     public function extend($resource, $token, $ttl)
     {
-        return $this->driver->extend($resource, $token);
+        return $this->driver->extend($resource, $token, $ttl);
     }
 
     /**

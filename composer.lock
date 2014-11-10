@@ -73,12 +73,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/IcecaveStudios/interlude.git",
-                "reference": "8c9be1cb7e1a31c27f5defc138e9af74921e5a28"
+                "reference": "02382eab3d15d0409b026820fe66d9c6cad07031"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/interlude/zipball/8c9be1cb7e1a31c27f5defc138e9af74921e5a28",
-                "reference": "8c9be1cb7e1a31c27f5defc138e9af74921e5a28",
+                "url": "https://api.github.com/repos/IcecaveStudios/interlude/zipball/02382eab3d15d0409b026820fe66d9c6cad07031",
+                "reference": "02382eab3d15d0409b026820fe66d9c6cad07031",
                 "shasum": ""
             },
             "require": {
@@ -121,7 +121,7 @@
                 "timeout",
                 "ttl"
             ],
-            "time": "2014-11-10 02:06:59"
+            "time": "2014-11-10 05:52:54"
         },
         {
             "name": "icecave/isolator",
