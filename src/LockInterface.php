@@ -27,8 +27,8 @@ interface LockInterface
     public function isAcquired();
 
     /**
-     * Attempt to acquire this lock and throw an exception if acquisition
-     * is unsuccessful.
+     * Attempt to acquire this lock and throw an exception if acquisition is
+     * unsuccessful.
      *
      * @param integer|float $ttl     How long the lock should persist, in seconds.
      * @param integer|float $timeout How long to wait for lock acquisition, in seconds.

@@ -158,4 +158,76 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
                 $this->timeout
             );
     }
+
+    public function testTryAcquire()
+    {
+        $lock = $this->factory->tryAcquire('<resource>', $this->ttl);
+
+        $this->assertInstanceOf(
+            Lock::class,
+            $lock
+        );
+
+        $this->assertTrue(
+            $lock->isAcquired()
+        );
+
+        $this
+            ->driver
+            ->acquire
+            ->calledWith(
+                '<resource>',
+                '<token>',
+                $this->ttl,
+                INF
+            );
+    }
+
+    public function testTryAcquireWithTimeout()
+    {
+        $lock = $this->factory->tryAcquire('<resource>', $this->ttl, $this->timeout);
+
+        $this->assertInstanceOf(
+            Lock::class,
+            $lock
+        );
+
+        $this->assertTrue(
+            $lock->isAcquired()
+        );
+
+        $this
+            ->driver
+            ->acquire
+            ->calledWith(
+                '<resource>',
+                '<token>',
+                $this->ttl,
+                $this->timeout
+            );
+    }
+
+    public function testTryAcquireFailure()
+    {
+        $this
+            ->driver
+            ->acquire
+            ->returns(false);
+
+        $lock = $this->factory->tryAcquire('<resource>', $this->ttl);
+
+        $this->assertNull(
+            $lock
+        );
+
+        $this
+            ->driver
+            ->acquire
+            ->calledWith(
+                '<resource>',
+                '<token>',
+                $this->ttl,
+                INF
+            );
+    }
 }
