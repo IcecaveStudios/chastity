@@ -10,9 +10,9 @@ end
 
 -- Extend the TTL ...
 redis.call(
-    'EXPIRE',
+    'PEXPIRE',
     KEYS[1],
-    redis.call('PTTL') + ARGV[2]
+    redis.call('PTTL', KEYS[1]) + ARGV[2]
 )
 
 return true

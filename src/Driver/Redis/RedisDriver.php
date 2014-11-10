@@ -61,11 +61,11 @@ class RedisDriver implements DriverInterface
         if (!$this->extendHash) {
             $this->extendHash = $this->redisClient->script(
                 'LOAD',
-                file_get_contents(__DIR__ . '/script-extend.lua')
+                file_get_contents(__DIR__ . '/redis-extend.lua')
             );
         }
 
-        return $this->redisClient->evalsha(
+        return (bool) $this->redisClient->evalsha(
             $this->extendHash,
             1,
             $this->generateKey($resource),
@@ -87,11 +87,11 @@ class RedisDriver implements DriverInterface
         if (!$this->releaseHash) {
             $this->releaseHash = $this->redisClient->script(
                 'LOAD',
-                file_get_contents(__DIR__ . '/script-release.lua')
+                file_get_contents(__DIR__ . '/redis-release.lua')
             );
         }
 
-        return $this->redisClient->evalsha(
+        return (bool) $this->redisClient->evalsha(
             $this->releaseHash,
             1,
             $this->generateKey($resource),
@@ -106,10 +106,10 @@ class RedisDriver implements DriverInterface
 
     private function convertTimeToLive($ttl)
     {
-        $ttl = round($ttl * 1000);
+        $ttl = intval($ttl * 1000);
 
         if ($ttl <= 0) {
-            throw new InvalidArgumentException('TTL can not be zero.');
+            throw new InvalidArgumentException('TTL must be greater than zero.');
         }
 
         return $ttl;
