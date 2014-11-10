@@ -1,0 +1,26 @@
+
+
+Code Coverage Report:       
+  2014-11-10 06:13:49       
+                            
+ Summary:                   
+  Classes: 100.00% (8/8)    
+  Methods: 100.00% (35/35)  
+  Lines:   100.00% (166/166)
+
+\Icecave\Chastity::Lock
+  Methods: 100.00% ( 8/ 8)   Lines: 100.00% ( 43/ 43)
+\Icecave\Chastity::LockFactory
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% ( 17/ 17)
+\Icecave\Chastity::ReentrantLock
+  Methods: 100.00% ( 8/ 8)   Lines: 100.00% ( 30/ 30)
+\Icecave\Chastity\Driver::BlockingAdaptor
+  Methods: 100.00% ( 6/ 6)   Lines: 100.00% ( 17/ 17)
+\Icecave\Chastity\Driver\Redis::RedisDriver
+  Methods: 100.00% ( 7/ 7)   Lines: 100.00% ( 38/ 38)
+\Icecave\Chastity\Exception::LockAcquisitionException
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
+\Icecave\Chastity\Exception::LockAlreadyAcquiredException
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
+\Icecave\Chastity\Exception::LockNotAcquiredException
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
