@@ -17,8 +17,15 @@ $factory = new LockFactory(
 );
 
 echo 'Waiting for lock ...' . PHP_EOL;
-$lock = $factory->acquire('foo', 10, 0);
-echo 'Lock acquired, sleeping ...' . PHP_EOL;
+
+// Acquire a lock.
+// The lock is automatically released when it goes out of scope.
+$lock = $factory->acquire(
+    'my-resource', // An arbitrary "resource" to lock
+    10,            // The TTL of the lock, in seconds.
+    300            // How long to wait for lock to be freed and acquired by this process (ie, timeout), in seconds.
+);
+
+echo 'Acquired!' . PHP_EOL;
 sleep(5);
 echo 'Done!' . PHP_EOL;
-

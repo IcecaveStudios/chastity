@@ -1,7 +1,14 @@
 {
     "name": "icecave/chastity",
-    "description": "This package needs a description!",
-    "keywords": [],
+    "description": "Distributed advisory locking for PHP.",
+    "keywords": [
+        "lock",
+        "exclusive",
+        "mutex",
+        "advisory",
+        "distributed",
+        "redis"
+    ],
     "homepage": "https://github.com/IcecaveStudios/chastity",
     "license": "MIT",
     "authors": [

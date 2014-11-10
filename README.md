@@ -4,10 +4,23 @@
 [![Test Coverage]](https://coveralls.io/r/IcecaveStudios/chastity?branch=develop)
 [![SemVer]](http://semver.org)
 
-**Chastity** needs a description!
+**Chastity** provides an abstraction for acquiring and releasing advisory locks
+in a distributed environment.
 
 * Install via [Composer](http://getcomposer.org) package [icecave/chastity](https://packagist.org/packages/icecave/chastity)
 * Read the [API documentation](http://icecavestudios.github.io/chastity/artifacts/documentation/api/)
+
+## Drivers
+
+* [Redis](src/Driver/Redis)
+* Redlock (not yet implemented)
+* PDO (not yet implemented)
+* MySQL advisory locks (not yet implemented)
+
+## Examples
+
+* [Acquiring a lock](examples/acquire)
+* [Extending an already acquired lock](examples/acquire)
 
 ## Contact us
 

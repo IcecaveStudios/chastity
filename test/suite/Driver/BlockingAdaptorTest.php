@@ -2,17 +2,11 @@
 namespace Icecave\Chastity\Driver;
 
 use Eloquent\Phony\Phpunit\Phony;
-use Icecave\Chastity\Driver\BlockingAdaptor;
-use Icecave\Chastity\Driver\BlockingDriverInterface;
-use Icecave\Chastity\Driver\DriverInterface;
-use Icecave\Druid\Uuid;
-use Icecave\Druid\UuidGeneratorInterface;
-use Icecave\Druid\UuidInterface;
 use Icecave\Interlude\Invoker;
 use Icecave\Interlude\InvokerInterface;
 use PHPUnit_Framework_TestCase;
 
-class LockFactoryTest extends PHPUnit_Framework_TestCase
+class BlockingAdaptorTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
