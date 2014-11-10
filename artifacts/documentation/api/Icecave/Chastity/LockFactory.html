@@ -58,7 +58,17 @@
                 </td>
                 <td class="last">
                     <a href="#method_acquire">acquire</a>(string $resource, integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)
-                    <p>Acquire a lock for the given resource.</p>
+                    <p>Attempt to acquire a lock and throw an exception if acquisition is unsuccessful.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>|null
+                </td>
+                <td class="last">
+                    <a href="#method_tryAcquire">tryAcquire</a>(string $resource, integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)
+                    <p>Attempt to acquire a lock.</p>
                 </td>
                 <td></td>
             </tr>
@@ -68,7 +78,7 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 12</div>
+        <div class="location">at line 13</div>
         <code>            public            
     <strong>__construct</strong>(<a href="../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a> $driver, <abbr title="Icecave\Druid\UuidGeneratorInterface">UuidGeneratorInterface</abbr> $uuidGenerator = null)</code>
     </h3>
@@ -102,7 +112,7 @@
     </div>
 
                 <h3 id="method_create">
-        <div class="location">at line 35</div>
+        <div class="location">at line 36</div>
         <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>
     <strong>create</strong>(string $resource)</code>
     </h3>
@@ -137,14 +147,14 @@
     </div>
 
                 <h3 id="method_acquire">
-        <div class="location">at line 61</div>
+        <div class="location">at line 64</div>
         <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>
     <strong>acquire</strong>(string $resource, integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
     <div class="details">
-        <p>Acquire a lock for the given resource.</p>
-        <p>This is a convenience method equivalent to acquiring the lock returned by
-a call to $this->create($resource).</p>
+        <p>Attempt to acquire a lock and throw an exception if acquisition is unsuccessful.</p>
+        <p>This is a convenience method analogous to calling acquire() on the lock
+returned by a call to $this->create($resource).</p>
         <div class="tags">
                             <h4>Parameters</h4>
 
@@ -173,6 +183,60 @@ a call to $this->create($resource).</p>
         <tr>
             <td><a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></td>
             <td>An acquired lock for the given resource.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="LockAcquisitionException">LockAcquisitionException</abbr></td>
+                <td>if the lock can not be acquired.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_tryAcquire">
+        <div class="location">at line 85</div>
+        <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>|null
+    <strong>tryAcquire</strong>(string $resource, integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
+    </h3>
+    <div class="details">
+        <p>Attempt to acquire a lock.</p>
+        <p>This is a convenience method analogous to calling tryAcquire() on the
+lock returned by a call to $this->create($resource).</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$resource</td>
+                <td>The resource to lock.</td>
+            </tr>
+                    <tr>
+                <td>integer|<abbr title="Icecave\Chastity\float">float</abbr></td>
+                <td>$ttl</td>
+                <td>How long the lock should persist, in seconds.</td>
+            </tr>
+                    <tr>
+                <td>integer|<abbr title="Icecave\Chastity\float">float</abbr></td>
+                <td>$timeout</td>
+                <td>How long to wait for lock acquisition, in seconds.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>|null</td>
+            <td>An acquired lock for the given resource, or null if the lock could not be acquired.</td>
         </tr>
     </table>
 
