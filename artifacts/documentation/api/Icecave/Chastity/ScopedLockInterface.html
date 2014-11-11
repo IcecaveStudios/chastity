@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="robots" content="index, follow, all" />
-        <title>Icecave\Chastity\LockInterface | icecave/chastity API</title>
+        <title>Icecave\Chastity\ScopedLockInterface | icecave/chastity API</title>
                     <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
                             </head>
         <body id="class">
@@ -19,11 +19,17 @@
         <div id="title">icecave/chastity API</div>
 
             <div class="type">Interface</div>
-    <h1><a href="../../Icecave/Chastity.html">Icecave\Chastity</a>\LockInterface</h1>
+    <h1><a href="../../Icecave/Chastity.html">Icecave\Chastity</a>\ScopedLockInterface</h1>
     </div>
         <div class="content">
-                <p>interface    <strong>LockInterface</strong></p>
+                <p>interface    <strong>ScopedLockInterface</strong>        implements
+        <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></p>
 
+            <div class="description">
+            <p>Automatically releases an underlying lock upon destruction.</p>
+            <p>
+</p>
+        </div>
     
     
     
@@ -38,7 +44,7 @@
                     <a href="#method_resource">resource</a>()
                     <p>Get the resource to which this lock applies.</p>
                 </td>
-                <td></td>
+                <td><small>from&nbsp;<a href="../../Icecave/Chastity/LockInterface.html#method_resource"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></small></td>
             </tr>
                     <tr>
                 <td class="type">
@@ -48,7 +54,7 @@
                     <a href="#method_isAcquired">isAcquired</a>()
                     <p>Check if this lock has been acquired.</p>
                 </td>
-                <td></td>
+                <td><small>from&nbsp;<a href="../../Icecave/Chastity/LockInterface.html#method_isAcquired"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></small></td>
             </tr>
                     <tr>
                 <td class="type">
@@ -58,7 +64,7 @@
                     <a href="#method_acquire">acquire</a>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)
                     <p>Attempt to acquire this lock and throw an exception if acquisition is unsuccessful.</p>
                 </td>
-                <td></td>
+                <td><small>from&nbsp;<a href="../../Icecave/Chastity/LockInterface.html#method_acquire"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></small></td>
             </tr>
                     <tr>
                 <td class="type">
@@ -68,7 +74,7 @@
                     <a href="#method_tryAcquire">tryAcquire</a>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)
                     <p>Attempt to acquire this lock.</p>
                 </td>
-                <td></td>
+                <td><small>from&nbsp;<a href="../../Icecave/Chastity/LockInterface.html#method_tryAcquire"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></small></td>
             </tr>
                     <tr>
                 <td class="type">
@@ -78,7 +84,7 @@
                     <a href="#method_extend">extend</a>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl)
                     <p>Extend the TTL of this lock.</p>
                 </td>
-                <td></td>
+                <td><small>from&nbsp;<a href="../../Icecave/Chastity/LockInterface.html#method_extend"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></small></td>
             </tr>
                     <tr>
                 <td class="type">
@@ -88,6 +94,26 @@
                     <a href="#method_release">release</a>()
                     <p>Release this lock.</p>
                 </td>
+                <td><small>from&nbsp;<a href="../../Icecave/Chastity/LockInterface.html#method_release"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method___destruct">__destruct</a>()
+                    <p>Release the underlying lock.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_detach">detach</a>()
+                    <p>Detach this scoped lock from its underlying lock.</p>
+                </td>
                 <td></td>
             </tr>
             </table>
@@ -96,7 +122,7 @@
         <h2>Details</h2>
 
                         <h3 id="method_resource">
-        <div class="location">at line 15</div>
+        <div class="location">in <a href="../../Icecave/Chastity/LockInterface.html#method_resource"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a> at line 15</div>
         <code>            public            string
     <strong>resource</strong>()</code>
     </h3>
@@ -121,7 +147,7 @@
     </div>
 
                 <h3 id="method_isAcquired">
-        <div class="location">at line 22</div>
+        <div class="location">in <a href="../../Icecave/Chastity/LockInterface.html#method_isAcquired"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a> at line 22</div>
         <code>            public            boolean
     <strong>isAcquired</strong>()</code>
     </h3>
@@ -146,7 +172,7 @@
     </div>
 
                 <h3 id="method_acquire">
-        <div class="location">at line 34</div>
+        <div class="location">in <a href="../../Icecave/Chastity/LockInterface.html#method_acquire"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a> at line 34</div>
         <code>            public            
     <strong>acquire</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
@@ -190,7 +216,7 @@
     </div>
 
                 <h3 id="method_tryAcquire">
-        <div class="location">at line 45</div>
+        <div class="location">in <a href="../../Icecave/Chastity/LockInterface.html#method_tryAcquire"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a> at line 45</div>
         <code>            public            boolean
     <strong>tryAcquire</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
@@ -239,7 +265,7 @@
     </div>
 
                 <h3 id="method_extend">
-        <div class="location">at line 54</div>
+        <div class="location">in <a href="../../Icecave/Chastity/LockInterface.html#method_extend"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a> at line 54</div>
         <code>            public            
     <strong>extend</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl)</code>
     </h3>
@@ -274,7 +300,7 @@
     </div>
 
                 <h3 id="method_release">
-        <div class="location">at line 61</div>
+        <div class="location">in <a href="../../Icecave/Chastity/LockInterface.html#method_release"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a> at line 61</div>
         <code>            public            
     <strong>release</strong>()</code>
     </h3>
@@ -294,6 +320,47 @@
             </tr>
             </table>
 
+            
+                    </div>
+    </div>
+
+                <h3 id="method___destruct">
+        <div class="location">at line 12</div>
+        <code>            public            
+    <strong>__destruct</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Release the underlying lock.</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_detach">
+        <div class="location">at line 22</div>
+        <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>
+    <strong>detach</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Detach this scoped lock from its underlying lock.</p>
+        <p>A detached scoped lock will no longer automatically release the lock on
+destruction.</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a></td>
+            <td>The underlying lock.</td>
+        </tr>
+    </table>
+
+            
             
                     </div>
     </div>

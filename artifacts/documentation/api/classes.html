@@ -61,8 +61,7 @@
                                         <a href="Icecave/Chastity/Exception/LockAcquisitionException.html" target="main"><abbr title="Icecave\Chastity\Exception\LockAcquisitionException">Icecave\Chastity\Exception\LockAcquisitionException</abbr></a>
                                     </td>
                 <td>
-                    
-
+                    Indicates that an attempt to acquire a lock has failed.
                 </td>
             </tr>
                     <tr>
@@ -70,8 +69,15 @@
                                         <a href="Icecave/Chastity/Exception/LockAlreadyAcquiredException.html" target="main"><abbr title="Icecave\Chastity\Exception\LockAlreadyAcquiredException">Icecave\Chastity\Exception\LockAlreadyAcquiredException</abbr></a>
                                     </td>
                 <td>
-                    
-
+                    An attempt has been made to acquire a lock that is already acquired.
+                </td>
+            </tr>
+                    <tr>
+                <td>
+                                        <a href="Icecave/Chastity/Exception/LockDetachedException.html" target="main"><abbr title="Icecave\Chastity\Exception\LockDetachedException">Icecave\Chastity\Exception\LockDetachedException</abbr></a>
+                                    </td>
+                <td>
+                    A lock operation has been attempted on a detatched scoped lock.
                 </td>
             </tr>
                     <tr>
@@ -79,8 +85,7 @@
                                         <a href="Icecave/Chastity/Exception/LockNotAcquiredException.html" target="main"><abbr title="Icecave\Chastity\Exception\LockNotAcquiredException">Icecave\Chastity\Exception\LockNotAcquiredException</abbr></a>
                                     </td>
                 <td>
-                    
-
+                    An operation that requires a lock to be acquired can not be performed because the lock has NOT been acquired.
                 </td>
             </tr>
                     <tr>
@@ -134,6 +139,22 @@
                                     </td>
                 <td>
                     Wraps an existing lock to provide reentrancy support.
+                </td>
+            </tr>
+                    <tr>
+                <td>
+                                        <a href="Icecave/Chastity/ScopedLock.html" target="main"><abbr title="Icecave\Chastity\ScopedLock">Icecave\Chastity\ScopedLock</abbr></a>
+                                    </td>
+                <td>
+                    Automatically releases an underlying lock upon destruction.
+                </td>
+            </tr>
+                    <tr>
+                <td>
+                    <em>                    <a href="Icecave/Chastity/ScopedLockInterface.html" target="main"><abbr title="Icecave\Chastity\ScopedLockInterface">Icecave\Chastity\ScopedLockInterface</abbr></a>
+                    </em>                </td>
+                <td>
+                    Automatically releases an underlying lock upon destruction.
                 </td>
             </tr>
             </table>

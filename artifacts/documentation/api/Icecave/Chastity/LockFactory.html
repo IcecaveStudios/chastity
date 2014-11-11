@@ -98,7 +98,7 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 17</div>
+        <div class="location">at line 21</div>
         <code>            public            
     <strong>__construct</strong>(<a href="../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a> $driver, <abbr title="Icecave\Druid\UuidGeneratorInterface">UuidGeneratorInterface</abbr> $uuidGenerator = null)</code>
     </h3>
@@ -114,14 +114,12 @@
                     <tr>
                 <td><a href="../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a></td>
                 <td>$driver</td>
-                <td>
-</td>
+                <td>The lock driver.</td>
             </tr>
                     <tr>
                 <td><abbr title="Icecave\Druid\UuidGeneratorInterface">UuidGeneratorInterface</abbr></td>
                 <td>$uuidGenerator</td>
-                <td>
-</td>
+                <td>The UUID generator used to create unique lock tokens.</td>
             </tr>
             </table>
 
@@ -132,7 +130,7 @@
     </div>
 
                 <h3 id="method_defaultTtl">
-        <div class="location">at line 40</div>
+        <div class="location">at line 44</div>
         <code>            public            integer|<abbr title="Icecave\Chastity\float">float</abbr>
     <strong>defaultTtl</strong>()</code>
     </h3>
@@ -157,7 +155,7 @@
     </div>
 
                 <h3 id="method_setDefaultTtl">
-        <div class="location">at line 50</div>
+        <div class="location">at line 54</div>
         <code>            public            
     <strong>setDefaultTtl</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl)</code>
     </h3>
@@ -183,7 +181,7 @@
     </div>
 
                 <h3 id="method_create">
-        <div class="location">at line 62</div>
+        <div class="location">at line 66</div>
         <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>
     <strong>create</strong>(string $resource)</code>
     </h3>
@@ -218,7 +216,7 @@
     </div>
 
                 <h3 id="method_acquire">
-        <div class="location">at line 96</div>
+        <div class="location">at line 100</div>
         <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>
     <strong>acquire</strong>(string $resource, integer|<abbr title="Icecave\Chastity\float">float</abbr>|null $ttl = null, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
@@ -272,7 +270,7 @@ returned by a call to $this->create($resource).</p>
     </div>
 
                 <h3 id="method_tryAcquire">
-        <div class="location">at line 121</div>
+        <div class="location">at line 125</div>
         <code>            public            <a href="../../Icecave/Chastity/LockInterface.html"><abbr title="Icecave\Chastity\LockInterface">LockInterface</abbr></a>|null
     <strong>tryAcquire</strong>(string $resource, integer|<abbr title="Icecave\Chastity\float">float</abbr>|null $ttl = null, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
