@@ -8,10 +8,23 @@ use Icecave\Chastity\Exception\LockNotAcquiredException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
+/**
+ * @internal
+ *
+ * Default lock implementation.
+ *
+ * Note that locks should not be constructed directly, rather they should
+ * created via using a {@see LockFactoryInterface}.
+ */
 class Lock implements LockInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    /**
+     * @param BlockingDriverInterface $driver   The lock driver.
+     * @param string                  $resource The resource to which this lock applies.
+     * @param string                  $token    A unique token representing this lock instance.
+     */
     public function __construct(
         BlockingDriverInterface $driver,
         $resource,
