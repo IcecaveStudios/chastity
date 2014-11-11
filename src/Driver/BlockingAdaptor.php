@@ -6,10 +6,17 @@ use Icecave\Interlude\Invoker;
 use Icecave\Interlude\InvokerInterface;
 
 /**
+ * @internal
+ *
  * Emulates blocking lock acquisition for non-blocking drivers.
  */
 class BlockingAdaptor implements BlockingDriverInterface
 {
+    /**
+     * @param DriverInterface       $driver  The non-blocking driver implementation to adapt.
+     * @param InvokerInterface|null $invoker The interlude invoker used to emulate timeouts.
+     * @param integer|float         $delay   How long to sleep in between acquisition requests.
+     */
     public function __construct(
         DriverInterface $driver,
         InvokerInterface $invoker = null,
