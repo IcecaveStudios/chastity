@@ -7,6 +7,9 @@ use Predis\ClientInterface;
 
 class RedisDriver implements DriverInterface
 {
+    /**
+     * @param ClientInterface $redisClient The connection to the Redis server.
+     */
     public function __construct(ClientInterface $redisClient)
     {
         $this->redisClient = $redisClient;
@@ -99,11 +102,26 @@ class RedisDriver implements DriverInterface
         );
     }
 
+    /**
+     * Generate the Redis key to use as the lock primitive for the given
+     * resource.
+     *
+     * @param string $resource
+     *
+     * @return string
+     */
     private function generateKey($resource)
     {
         return 'chastity:' . $resource;
     }
 
+    /**
+     * Convert a TTL in seconds to microseconds.
+     *
+     * @param integer|float $ttl
+     *
+     * @return integer
+     */
     private function convertTimeToLive($ttl)
     {
         $ttl = intval($ttl * 1000);

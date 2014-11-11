@@ -39,7 +39,7 @@ interface LockFactoryInterface
      * @param integer|float|null $ttl      How long the lock should persist, in seconds, or null to use the default.
      * @param integer|float      $timeout  How long to wait for lock acquisition, in seconds.
      *
-     * @return LockInterface            An acquired lock for the given resource.
+     * @return ScopedLockInterface      An acquired lock for the given resource.
      * @throws LockAcquisitionException if the lock can not be acquired.
      */
     public function acquire($resource, $ttl = null, $timeout = INF);
@@ -54,7 +54,7 @@ interface LockFactoryInterface
      * @param integer|float|null $ttl      How long the lock should persist, in seconds, or null to use the default.
      * @param integer|float      $timeout  How long to wait for lock acquisition, in seconds.
      *
-     * @return LockInterface|null An acquired lock for the given resource, or null if the lock could not be acquired.
+     * @return ScopedLockInterface|null An acquired lock for the given resource, or null if the lock could not be acquired.
      */
     public function tryAcquire($resource, $ttl = null, $timeout = INF);
 }

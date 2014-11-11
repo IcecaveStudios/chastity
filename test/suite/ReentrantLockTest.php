@@ -35,18 +35,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDestruct()
-    {
-        $this->lock->tryAcquire($this->ttl);
-        $this->lock->__destruct();
-
-        $this
-            ->innerLock
-            ->release
-            ->once()
-            ->called();
-    }
-
     public function testResource()
     {
         $this->assertSame(

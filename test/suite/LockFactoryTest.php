@@ -95,6 +95,21 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDefaultTtl()
+    {
+        $this->assertSame(
+            600,
+            $this->factory->defaultTtl()
+        );
+
+        $this->factory->setDefaultTtl(300);
+
+        $this->assertSame(
+            300,
+            $this->factory->defaultTtl()
+        );
+    }
+
     public function testCreate()
     {
         $lock = $this->factory->create('<resource>');
@@ -141,27 +156,12 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDefaultTtl()
-    {
-        $this->assertSame(
-            600,
-            $this->factory->defaultTtl()
-        );
-
-        $this->factory->setDefaultTtl(300);
-
-        $this->assertSame(
-            300,
-            $this->factory->defaultTtl()
-        );
-    }
-
     public function testAcquire()
     {
         $lock = $this->factory->acquire('<resource>');
 
         $this->assertInstanceOf(
-            Lock::class,
+            ScopedLockInterface::class,
             $lock
         );
 
@@ -185,7 +185,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $lock = $this->factory->acquire('<resource>', $this->ttl);
 
         $this->assertInstanceOf(
-            Lock::class,
+            ScopedLockInterface::class,
             $lock
         );
 
@@ -209,7 +209,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $lock = $this->factory->acquire('<resource>', $this->ttl, $this->timeout);
 
         $this->assertInstanceOf(
-            Lock::class,
+            ScopedLockInterface::class,
             $lock
         );
 
@@ -233,7 +233,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $lock = $this->factory->tryAcquire('<resource>');
 
         $this->assertInstanceOf(
-            Lock::class,
+            ScopedLockInterface::class,
             $lock
         );
 
@@ -257,7 +257,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $lock = $this->factory->tryAcquire('<resource>', $this->ttl);
 
         $this->assertInstanceOf(
-            Lock::class,
+            ScopedLockInterface::class,
             $lock
         );
 
@@ -281,7 +281,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $lock = $this->factory->tryAcquire('<resource>', $this->ttl, $this->timeout);
 
         $this->assertInstanceOf(
-            Lock::class,
+            ScopedLockInterface::class,
             $lock
         );
 

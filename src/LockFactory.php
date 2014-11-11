@@ -14,6 +14,10 @@ class LockFactory implements LockFactoryInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    /**
+     * @param DriverInterface             $driver        The lock driver.
+     * @param UuidGeneratorInterface|null $uuidGenerator The UUID generator used to create unique lock tokens.
+     */
     public function __construct(
         DriverInterface $driver,
         UuidGeneratorInterface $uuidGenerator = null
@@ -103,7 +107,7 @@ class LockFactory implements LockFactoryInterface, LoggerAwareInterface
 
         $lock->acquire($ttl, $timeout);
 
-        return $lock;
+        return new ScopedLock($lock);
     }
 
     /**
@@ -127,7 +131,7 @@ class LockFactory implements LockFactoryInterface, LoggerAwareInterface
         $lock = $this->create($resource);
 
         if ($lock->tryAcquire($ttl, $timeout)) {
-            return $lock;
+            return new ScopedLock($lock);
         }
 
         return null;

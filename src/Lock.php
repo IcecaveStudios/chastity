@@ -36,22 +36,6 @@ class Lock implements LockInterface, LoggerAwareInterface
     }
 
     /**
-     * Release this lock.
-     */
-    public function __destruct()
-    {
-        if (!$this->isAcquired) {
-            return;
-        }
-
-        try {
-            $this->release();
-        } catch (LockNotAcquiredException $e) {
-            // ignore ...
-        }
-    }
-
-    /**
      * Get the resource to which this lock applies.
      *
      * @return string The resource to which this lock applies.
@@ -161,7 +145,6 @@ class Lock implements LockInterface, LoggerAwareInterface
      *
      * @param integer|float $ttl How long the lock should persist, in seconds.
      *
-     * @return boolean                  True if the lock is acquired and has been extended; otherwise, false.
      * @throws LockNotAcquiredException if the lock has not been acquired.
      */
     public function extend($ttl)

@@ -46,51 +46,6 @@ class LockTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDestruct()
-    {
-        $this->lock->__destruct();
-
-        $this
-            ->driver
-            ->release
-            ->never()
-            ->called();
-    }
-
-    public function testDestructWhenAcquired()
-    {
-        $this->lock->tryAcquire($this->ttl);
-        $this->lock->__destruct();
-
-        $this
-            ->driver
-            ->release
-            ->once()
-            ->calledWith('<resource>', '<token>');
-    }
-
-    public function testDestructLoggingWhenAcquired()
-    {
-        $this->lock->tryAcquire($this->ttl);
-
-        $this->lock->setLogger(
-            $this->logger->mock()
-        );
-
-        $this->lock->__destruct();
-
-        Phony::inOrder(
-            $this->driver->release->called(),
-            $this->logger->debug->calledWith(
-                'Resource "{resource}" released by {token}',
-                [
-                    'resource' => '<resource>',
-                    'token'    => '<token>',
-                ]
-            )
-        );
-    }
-
     public function testResource()
     {
         $this->assertSame(
