@@ -25,11 +25,6 @@
                 <p>class    <strong>BlockingAdaptor</strong>        implements
         <a href="../../../Icecave/Chastity/Driver/BlockingDriverInterface.html"><abbr title="Icecave\Chastity\Driver\BlockingDriverInterface">BlockingDriverInterface</abbr></a></p>
 
-            <div class="description">
-            <p>Emulates blocking lock acquisition for non-blocking drivers.</p>
-            <p>
-</p>
-        </div>
     
     
     
@@ -41,7 +36,7 @@
                     
                 </td>
                 <td class="last">
-                    <a href="#method___construct">__construct</a>(<a href="../../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a> $driver, <abbr title="Icecave\Interlude\InvokerInterface">InvokerInterface</abbr> $invoker = null, $delay = 0.1)
+                    <a href="#method___construct">__construct</a>(<a href="../../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a> $driver, <abbr title="Icecave\Interlude\InvokerInterface">InvokerInterface</abbr> $invoker = null, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $delay = 0.1)
                     <p>
 </p>
                 </td>
@@ -93,9 +88,9 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 13</div>
+        <div class="location">at line 20</div>
         <code>            public            
-    <strong>__construct</strong>(<a href="../../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a> $driver, <abbr title="Icecave\Interlude\InvokerInterface">InvokerInterface</abbr> $invoker = null, $delay = 0.1)</code>
+    <strong>__construct</strong>(<a href="../../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a> $driver, <abbr title="Icecave\Interlude\InvokerInterface">InvokerInterface</abbr> $invoker = null, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $delay = 0.1)</code>
     </h3>
     <div class="details">
         <p>
@@ -109,20 +104,17 @@
                     <tr>
                 <td><a href="../../../Icecave/Chastity/Driver/DriverInterface.html"><abbr title="Icecave\Chastity\Driver\DriverInterface">DriverInterface</abbr></a></td>
                 <td>$driver</td>
-                <td>
-</td>
+                <td>The non-blocking driver implementation to adapt.</td>
             </tr>
                     <tr>
                 <td><abbr title="Icecave\Interlude\InvokerInterface">InvokerInterface</abbr></td>
                 <td>$invoker</td>
-                <td>
-</td>
+                <td>The interlude invoker used to emulate timeouts.</td>
             </tr>
                     <tr>
-                <td></td>
+                <td>integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr></td>
                 <td>$delay</td>
-                <td>
-</td>
+                <td>How long to sleep in between acquisition requests.</td>
             </tr>
             </table>
 
@@ -133,7 +125,7 @@
     </div>
 
                 <h3 id="method_acquire">
-        <div class="location">at line 37</div>
+        <div class="location">at line 44</div>
         <code>            public            boolean
     <strong>acquire</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $timeout)</code>
     </h3>
@@ -183,7 +175,7 @@
     </div>
 
                 <h3 id="method_isAcquired">
-        <div class="location">at line 65</div>
+        <div class="location">at line 72</div>
         <code>            public            boolean
     <strong>isAcquired</strong>(string $resource, string $token)</code>
     </h3>
@@ -223,7 +215,7 @@
     </div>
 
                 <h3 id="method_extend">
-        <div class="location">at line 79</div>
+        <div class="location">at line 86</div>
         <code>            public            boolean
     <strong>extend</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl)</code>
     </h3>
@@ -268,7 +260,7 @@
     </div>
 
                 <h3 id="method_release">
-        <div class="location">at line 92</div>
+        <div class="location">at line 99</div>
         <code>            public            boolean
     <strong>release</strong>(string $resource, string $token)</code>
     </h3>
