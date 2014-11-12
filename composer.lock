@@ -341,12 +341,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eloquent/phony.git",
-                "reference": "55c6679e5617249e1984d73012985b6d2cc4b69b"
+                "reference": "54055a922ecca519c6655f807b9e3b9bfc7a19a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eloquent/phony/zipball/55c6679e5617249e1984d73012985b6d2cc4b69b",
-                "reference": "55c6679e5617249e1984d73012985b6d2cc4b69b",
+                "url": "https://api.github.com/repos/eloquent/phony/zipball/54055a922ecca519c6655f807b9e3b9bfc7a19a3",
+                "reference": "54055a922ecca519c6655f807b9e3b9bfc7a19a3",
                 "shasum": ""
             },
             "require": {
@@ -357,10 +357,12 @@
             "require-dev": {
                 "athletic/athletic": "~0.1",
                 "counterpart/counterpart": "~1",
+                "danielstjules/pho": "~1",
                 "eloquent/fixie": "~0.2.0@dev",
                 "hamcrest/hamcrest-php": "~1",
                 "icecave/isolator": "~3",
                 "mockery/mockery": "~0",
+                "peridot-php/peridot": "~1",
                 "phake/phake": "~1",
                 "phpspec/prophecy": "~1",
                 "phpunit/phpunit": "~4",
@@ -405,7 +407,7 @@
                 "stubbing",
                 "test"
             ],
-            "time": "2014-11-10 12:23:02"
+            "time": "2014-11-11 13:25:38"
         },
         {
             "name": "guzzle/guzzle",
