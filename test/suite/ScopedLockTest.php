@@ -27,7 +27,7 @@ class ScopedLockTest extends PHPUnit_Framework_TestCase
             ->isAcquired
             ->returns(true);
 
-        $this->ttl = 10;
+        $this->ttl     = 10;
         $this->timeout = 30;
 
         $this->lock = new ScopedLock(

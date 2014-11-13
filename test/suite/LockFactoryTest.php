@@ -15,10 +15,10 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->driver = Phony::mock(BlockingDriverInterface::class);
-        $this->logger = Phony::mock(LoggerInterface::class);
+        $this->driver        = Phony::mock(BlockingDriverInterface::class);
+        $this->logger        = Phony::mock(LoggerInterface::class);
         $this->uuidGenerator = Phony::mock(UuidGeneratorInterface::class);
-        $this->uuid = Phony::mock(UuidInterface::class);
+        $this->uuid          = Phony::mock(UuidInterface::class);
 
         $this
             ->uuidGenerator
@@ -40,7 +40,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             ->isAcquired
             ->returns(true);
 
-        $this->ttl = 10;
+        $this->ttl     = 10;
         $this->timeout = 30;
 
         $this->factory = new LockFactory(

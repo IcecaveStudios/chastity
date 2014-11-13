@@ -36,7 +36,7 @@ class LockTest extends PHPUnit_Framework_TestCase
             ->release
             ->returns(true);
 
-        $this->ttl = 10;
+        $this->ttl     = 10;
         $this->timeout = 30;
 
         $this->lock = new Lock(

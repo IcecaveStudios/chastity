@@ -30,9 +30,9 @@ class Lock implements LockInterface, LoggerAwareInterface
         $resource,
         $token
     ) {
-        $this->driver = $driver;
+        $this->driver   = $driver;
         $this->resource = $resource;
-        $this->token = $token;
+        $this->token    = $token;
     }
 
     /**

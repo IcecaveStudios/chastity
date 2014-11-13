@@ -14,7 +14,7 @@ class ReentrantLock implements LockInterface
      */
     public function __construct(LockInterface $lock)
     {
-        $this->lock = $lock;
+        $this->lock  = $lock;
         $this->count = 0;
     }
 

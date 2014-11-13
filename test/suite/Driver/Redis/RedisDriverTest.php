@@ -37,7 +37,7 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
             ->evalsha
             ->returns(true);
 
-        $this->extendScript = __DIR__ . '/../../../../src/Driver/Redis/redis-extend.lua';
+        $this->extendScript  = __DIR__ . '/../../../../src/Driver/Redis/redis-extend.lua';
         $this->releaseScript = __DIR__ . '/../../../../src/Driver/Redis/redis-release.lua';
 
         $this->driver = new RedisDriver(

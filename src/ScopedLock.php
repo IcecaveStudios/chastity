@@ -46,10 +46,10 @@ class ScopedLock implements ScopedLockInterface
     public function detach()
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
-        $lock = $this->lock;
+        $lock       = $this->lock;
         $this->lock = null;
 
         return $lock;
@@ -64,7 +64,7 @@ class ScopedLock implements ScopedLockInterface
     public function resource()
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
         return $this->lock->resource();
@@ -79,7 +79,7 @@ class ScopedLock implements ScopedLockInterface
     public function isAcquired()
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
         return $this->lock->isAcquired();
@@ -99,7 +99,7 @@ class ScopedLock implements ScopedLockInterface
     public function acquire($ttl, $timeout = INF)
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
         $this->lock->acquire($ttl, $timeout);
@@ -118,7 +118,7 @@ class ScopedLock implements ScopedLockInterface
     public function tryAcquire($ttl, $timeout = INF)
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
         return $this->lock->tryAcquire($ttl, $timeout);
@@ -135,7 +135,7 @@ class ScopedLock implements ScopedLockInterface
     public function extend($ttl)
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
         $this->lock->extend($ttl);
@@ -150,7 +150,7 @@ class ScopedLock implements ScopedLockInterface
     public function release()
     {
         if (!$this->lock) {
-            throw new LockDetachedException();
+            throw new LockDetachedException;
         }
 
         $this->lock->release();

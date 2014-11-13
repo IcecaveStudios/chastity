@@ -13,7 +13,7 @@ class BlockingAdaptorTest extends PHPUnit_Framework_TestCase
         $this->driver = Phony::mock(DriverInterface::class);
         // $this->invoker = Phony::mock(InvokerInterface::class);
 
-        $this->ttl = 10;
+        $this->ttl     = 10;
         $this->timeout = 30;
 
         $this->adaptor = new BlockingAdaptor(

@@ -23,12 +23,12 @@ class BlockingAdaptor implements BlockingDriverInterface
         $delay = 0.1
     ) {
         if (null === $invoker) {
-            $invoker = new Invoker();
+            $invoker = new Invoker;
         }
 
-        $this->driver = $driver;
+        $this->driver  = $driver;
         $this->invoker = $invoker;
-        $this->delay = $delay;
+        $this->delay   = $delay;
     }
 
     /**

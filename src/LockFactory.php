@@ -30,7 +30,7 @@ class LockFactory implements LockFactoryInterface, LoggerAwareInterface
             $uuidGenerator = new UuidVersion4Generator;
         }
 
-        $this->driver = $driver;
+        $this->driver        = $driver;
         $this->uuidGenerator = $uuidGenerator;
 
         $this->setDefaultTtl(600);
