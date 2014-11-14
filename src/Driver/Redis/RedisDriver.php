@@ -2,11 +2,14 @@
 namespace Icecave\Chastity\Driver\Redis;
 
 use Icecave\Chastity\Driver\DriverInterface;
+use Icecave\Chastity\Driver\PollingDriverTrait;
 use InvalidArgumentException;
 use Predis\ClientInterface;
 
 class RedisDriver implements DriverInterface
 {
+    use PollingDriverTrait;
+
     /**
      * @param ClientInterface $redisClient The connection to the Redis server.
      */
@@ -24,7 +27,7 @@ class RedisDriver implements DriverInterface
      *
      * @return boolean True if the lock is acquired; otherwise, false.
      */
-    public function acquire($resource, $token, $ttl)
+    public function poll($resource, $token, $ttl)
     {
         return (bool) $this->redisClient->set(
             $this->generateKey($resource),

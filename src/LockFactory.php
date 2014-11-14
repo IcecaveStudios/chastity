@@ -1,8 +1,6 @@
 <?php
 namespace Icecave\Chastity;
 
-use Icecave\Chastity\Driver\BlockingAdaptor;
-use Icecave\Chastity\Driver\BlockingDriverInterface;
 use Icecave\Chastity\Driver\DriverInterface;
 use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Druid\UuidGeneratorInterface;
@@ -22,10 +20,6 @@ class LockFactory implements LockFactoryInterface, LoggerAwareInterface
         DriverInterface $driver,
         UuidGeneratorInterface $uuidGenerator = null
     ) {
-        if (!$driver instanceof BlockingDriverInterface) {
-            $driver = new BlockingAdaptor($driver);
-        }
-
         if (null === $uuidGenerator) {
             $uuidGenerator = new UuidVersion4Generator;
         }

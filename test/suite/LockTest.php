@@ -2,7 +2,7 @@
 namespace Icecave\Chastity;
 
 use Eloquent\Phony\Phpunit\Phony;
-use Icecave\Chastity\Driver\BlockingDriverInterface;
+use Icecave\Chastity\Driver\DriverInterface;
 use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockAlreadyAcquiredException;
 use Icecave\Chastity\Exception\LockNotAcquiredException;
@@ -13,7 +13,7 @@ class LockTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->driver = Phony::mock(BlockingDriverInterface::class);
+        $this->driver = Phony::mock(DriverInterface::class);
         $this->logger = Phony::mock(LoggerInterface::class);
 
         $this

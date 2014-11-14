@@ -2,8 +2,6 @@
 namespace Icecave\Chastity;
 
 use Eloquent\Phony\Phpunit\Phony;
-use Icecave\Chastity\Driver\BlockingAdaptor;
-use Icecave\Chastity\Driver\BlockingDriverInterface;
 use Icecave\Chastity\Driver\DriverInterface;
 use Icecave\Druid\Uuid;
 use Icecave\Druid\UuidGeneratorInterface;
@@ -15,7 +13,7 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->driver        = Phony::mock(BlockingDriverInterface::class);
+        $this->driver        = Phony::mock(DriverInterface::class);
         $this->logger        = Phony::mock(LoggerInterface::class);
         $this->uuidGenerator = Phony::mock(UuidGeneratorInterface::class);
         $this->uuid          = Phony::mock(UuidInterface::class);
@@ -72,27 +70,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
 
         // Allow to throw if the token was not a UUID ...
         Uuid::fromString($token);
-    }
-
-    public function testBlockingAdaptor()
-    {
-        $this->driver = Phony::mock(DriverInterface::class);
-
-        $this->factory = new LockFactory(
-            $this->driver->mock(),
-            $this->uuidGenerator->mock()
-        );
-
-        $lock = $this->factory->create('<resource>');
-
-        $this->assertEquals(
-            new Lock(
-                new BlockingAdaptor($this->driver->mock()),
-                '<resource>',
-                '<token>'
-            ),
-            $lock
-        );
     }
 
     public function testDefaultTtl()

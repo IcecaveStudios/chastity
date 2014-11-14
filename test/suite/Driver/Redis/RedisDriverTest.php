@@ -45,9 +45,9 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAcquire()
+    public function testPoll()
     {
-        $result = $this->driver->acquire(
+        $result = $this->driver->poll(
             '<resource>',
             '<token>',
             1.5
@@ -69,14 +69,14 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAcquireFailure()
+    public function testPollFailure()
     {
         $this
             ->redisClient
             ->set
             ->returns(false);
 
-        $result = $this->driver->acquire(
+        $result = $this->driver->poll(
             '<resource>',
             '<token>',
             1.5
@@ -87,14 +87,14 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAcquireWithInvalidTtl()
+    public function testPollWithInvalidTtl()
     {
         $this->setExpectedException(
             InvalidArgumentException::class,
             'TTL must be greater than zero.'
         );
 
-        $this->driver->acquire(
+        $this->driver->poll(
             '<resource>',
             '<token>',
             0

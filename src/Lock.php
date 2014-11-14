@@ -1,7 +1,7 @@
 <?php
 namespace Icecave\Chastity;
 
-use Icecave\Chastity\Driver\BlockingDriverInterface;
+use Icecave\Chastity\Driver\DriverInterface;
 use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockAlreadyAcquiredException;
 use Icecave\Chastity\Exception\LockNotAcquiredException;
@@ -21,12 +21,12 @@ class Lock implements LockInterface, LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * @param BlockingDriverInterface $driver   The lock driver.
-     * @param string                  $resource The resource to which this lock applies.
-     * @param string                  $token    A unique token representing this lock instance.
+     * @param DriverInterface $driver   The lock driver.
+     * @param string          $resource The resource to which this lock applies.
+     * @param string          $token    A unique token representing this lock instance.
      */
     public function __construct(
-        BlockingDriverInterface $driver,
+        DriverInterface $driver,
         $resource,
         $token
     ) {
