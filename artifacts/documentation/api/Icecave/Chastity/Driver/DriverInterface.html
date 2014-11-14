@@ -40,7 +40,7 @@
                     boolean
                 </td>
                 <td class="last">
-                    <a href="#method_acquire">acquire</a>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl)
+                    <a href="#method_acquire">acquire</a>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $timeout)
                     <p>Acquire a lock on the given resource.</p>
                 </td>
                 <td></td>
@@ -81,9 +81,9 @@
         <h2>Details</h2>
 
                         <h3 id="method_acquire">
-        <div class="location">at line 18</div>
+        <div class="location">at line 19</div>
         <code>            public            boolean
-    <strong>acquire</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl)</code>
+    <strong>acquire</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $timeout)</code>
     </h3>
     <div class="details">
         <p>Acquire a lock on the given resource.</p>
@@ -108,6 +108,11 @@
                 <td>$ttl</td>
                 <td>How long the lock should persist, in seconds.</td>
             </tr>
+                    <tr>
+                <td>integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr></td>
+                <td>$timeout</td>
+                <td>How long to wait for the lock to be acquired, in seconds.</td>
+            </tr>
             </table>
 
             
@@ -126,7 +131,7 @@
     </div>
 
                 <h3 id="method_isAcquired">
-        <div class="location">at line 28</div>
+        <div class="location">at line 29</div>
         <code>            public            boolean
     <strong>isAcquired</strong>(string $resource, string $token)</code>
     </h3>
@@ -166,7 +171,7 @@
     </div>
 
                 <h3 id="method_extend">
-        <div class="location">at line 39</div>
+        <div class="location">at line 40</div>
         <code>            public            boolean
     <strong>extend</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\float">float</abbr> $ttl)</code>
     </h3>
@@ -211,7 +216,7 @@
     </div>
 
                 <h3 id="method_release">
-        <div class="location">at line 49</div>
+        <div class="location">at line 50</div>
         <code>            public            boolean
     <strong>release</strong>(string $resource, string $token)</code>
     </h3>
