@@ -1,18 +1,14 @@
--- KEYS[1] - the key that is used for the lock
--- ARGV[1] - the lock token
--- ARGV[2] - the amount to extend the TTL by, in millis
+local key   = KEYS[1]
+local token = ARGV[1]
+local ttl   = ARGV[2]
 
--- If the lock key does not contain the given token then bail early ...
-if ARGV[1] ~= redis.call('GET', KEYS[1])
-then
-    return false
+if token ~= redis.call('GET', key) then
+    return 0
 end
 
--- Extend the TTL ...
-redis.call(
-    'PEXPIRE',
-    KEYS[1],
-    redis.call('PTTL', KEYS[1]) + ARGV[2]
-)
+ttl = ttl + redis.call('PTTL', key)
+redis.call('PEXPIRE', key, ttl)
 
-return true
+redis.call('SET', 'lastTTL', ttl)
+
+return ttl

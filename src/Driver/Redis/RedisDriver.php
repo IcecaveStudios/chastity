@@ -4,7 +4,6 @@ namespace Icecave\Chastity\Driver\Redis;
 use Icecave\Chastity\Driver\DriverInterface;
 use Icecave\Chastity\Driver\Exception\DriverUnavailableException;
 use Icecave\Chastity\Driver\PollingDriverTrait;
-use InvalidArgumentException;
 use Predis\ClientInterface;
 use Predis\CommunicationException;
 
@@ -37,7 +36,7 @@ class RedisDriver implements DriverInterface
                 $this->generateKey($resource),
                 $token,
                 'PX',
-                $this->convertTimeToLive($ttl),
+                max(1, intval($ttl * 1000)),
                 'NX'
             );
         } catch (CommunicationException $e) {
@@ -52,7 +51,7 @@ class RedisDriver implements DriverInterface
      * @param string        $token    The token originally passed to acquire().
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean                    True if the lock is acquired and has been extended; otherwise, false.
+     * @return integer|float              The actual remaining TTL of the lock, (ie, 0 if the lock could not be extended).
      * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function extend($resource, $token, $ttl)
@@ -65,13 +64,16 @@ class RedisDriver implements DriverInterface
                 );
             }
 
-            return (bool) $this->redisClient->evalsha(
+            $ttl = $this->redisClient->evalsha(
                 $this->extendHash,
                 1,
                 $this->generateKey($resource),
                 $token,
-                $this->convertTimeToLive($ttl)
+                max(1, intval($ttl * 1000))
             );
+
+            // Convert micros to seconds ...
+            return $ttl / 1000;
         } catch (CommunicationException $e) {
             throw new DriverUnavailableException($e);
         }
@@ -118,24 +120,6 @@ class RedisDriver implements DriverInterface
     private function generateKey($resource)
     {
         return 'chastity:' . $resource;
-    }
-
-    /**
-     * Convert a TTL in seconds to microseconds.
-     *
-     * @param integer|float $ttl
-     *
-     * @return integer
-     */
-    private function convertTimeToLive($ttl)
-    {
-        $ttl = intval($ttl * 1000);
-
-        if ($ttl <= 0) {
-            throw new InvalidArgumentException('TTL must be greater than zero.');
-        }
-
-        return $ttl;
     }
 
     private $redisClient;

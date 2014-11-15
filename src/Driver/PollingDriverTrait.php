@@ -19,7 +19,7 @@ trait PollingDriverTrait
      * @param string        $token    The unique token representing the acquisition request.
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @return integer|float              The actual remaining TTL of the lock, (ie, 0 if the lock could not be acquired).
      * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     abstract public function poll($resource, $token, $ttl);
@@ -32,13 +32,13 @@ trait PollingDriverTrait
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      * @param integer|float $timeout  How long to wait for the lock to be acquired, in seconds.
      *
-     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @return integer|float              The actual remaining TTL of the lock, (ie, 0 if the lock could not be acquired).
      * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function acquire($resource, $token, $ttl, $timeout)
     {
         try {
-            return $this
+            $acquired = $this
                 ->invoker()
                 ->invoke(
                     function () use ($resource, $token, $ttl) {
@@ -52,9 +52,15 @@ trait PollingDriverTrait
                     INF,
                     $this->pollPeriod
                 );
+
+            if ($acquired) {
+                return $ttl;
+            }
         } catch (TimeoutException $e) {
-            return false;
+            // fall-through ...
         }
+
+        return 0;
     }
 
     /**

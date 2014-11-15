@@ -35,7 +35,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
 
     public function testAcquire()
     {
-        $this->assertTrue(
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-1>',
@@ -44,7 +45,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertFalse(
+        $this->assertSame(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
@@ -56,18 +58,33 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
 
     public function testAcquireTtl()
     {
-        $this->assertTrue(
-            $this->driver->acquire(
-                '<resource>',
-                '<token-1>',
-                1,
-                0
-            )
+        $requestedTtl = 0.1;
+
+        $actualTtl = $this->driver->acquire(
+            '<resource>',
+            '<token-1>',
+            0.1,
+            0
         );
 
-        usleep(1.1 * 1000000);
+        // Wait out the TTL.
+        usleep($actualTtl * 1000000);
 
-        $this->assertTrue(
+        // And a bit more to account for clock inaccuracies.
+        usleep(0.003 * 1000000);
+
+        $this->assertGreaterThan(
+            0,
+            $actualTtl
+        );
+
+        $this->assertLessThanOrEqual(
+            $requestedTtl,
+            $actualTtl
+        );
+
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
@@ -79,50 +96,65 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
 
     public function testAcquireTimeout()
     {
-        $this->assertTrue(
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-1>',
-                1,
+                0.1,
                 0
             )
         );
 
-        $this->assertTrue(
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
                 $this->irrelevantTtl,
-                2
+                0.15 // A little longer than the TTL of the first acquire.
             )
         );
     }
 
-    /**
-     * @large
-     */
     public function testExtend()
     {
-        $this->assertTrue(
-            $this->driver->acquire(
-                '<resource>',
-                '<token-1>',
-                1,
-                0
-            )
+        $requestedAcquireTtl = 0.1;
+        $requestedExtendTtl  = 0.2;
+
+        $actualAcquireTtl = $this->driver->acquire(
+            '<resource>',
+            '<token-1>',
+            $requestedAcquireTtl,
+            0
         );
 
-        $this->assertTrue(
-            $this->driver->extend(
-                '<resource>',
-                '<token-1>',
-                1
-            )
+        $this->assertGreaterThan(
+            0,
+            $actualAcquireTtl
         );
 
-        usleep(1.1 * 1000000);
+        $actualExtendTtl = $this->driver->extend(
+            '<resource>',
+            '<token-1>',
+            $requestedExtendTtl
+        );
 
-        $this->assertFalse(
+        $this->assertGreaterThan(
+            $actualAcquireTtl,
+            $actualExtendTtl
+        );
+
+        $this->assertLessThanOrEqual(
+            $actualAcquireTtl + $requestedExtendTtl,
+            $actualExtendTtl
+        );
+
+        // Wait out the original TTL.
+        usleep($actualAcquireTtl * 1000000);
+
+        $this->assertSame(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
@@ -131,9 +163,14 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        usleep(1 * 1000000);
+        // Wait out the rest of the TTL.
+        usleep(($actualExtendTtl - $actualAcquireTtl) * 1000000);
 
-        $this->assertTrue(
+        // And a bit more to account for clock inaccuracies.
+        usleep(0.003 * 1000000);
+
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
@@ -145,26 +182,35 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
 
     public function testExtendFailure()
     {
-        $this->assertTrue(
-            $this->driver->acquire(
-                '<resource>',
-                '<token-1>',
-                1,
-                0
-            )
+        $ttl = $this->driver->acquire(
+            '<resource>',
+            '<token-1>',
+            0.1,
+            0
         );
 
-        $this->assertFalse(
+        $this->assertGreaterThan(
+            0,
+            $ttl
+        );
+
+        $this->assertSame(
+            0,
             $this->driver->extend(
                 '<resource>',
                 '<token-2>',
-                10
+                $this->irrelevantTtl
             )
         );
 
-        usleep(1.1 * 1000000);
+        // Wait out the TTL.
+        usleep($ttl * 1000000);
 
-        $this->assertTrue(
+        // And a bit more to account for clock inaccuracies.
+        usleep(0.003 * 1000000);
+
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
@@ -176,7 +222,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
 
     public function testRelease()
     {
-        $this->assertTrue(
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-1>',
@@ -192,7 +239,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertTrue(
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
@@ -204,7 +252,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
 
     public function testReleaseFailure()
     {
-        $this->assertTrue(
+        $this->assertGreaterThan(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-1>',
@@ -220,7 +269,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertFalse(
+        $this->assertSame(
+            0,
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',

@@ -42,7 +42,8 @@ class PollingDriverTraitTest extends PHPUnit_Framework_TestCase
                 $this->ttl
             );
 
-        $this->assertTrue(
+        $this->assertSame(
+            $this->ttl,
             $result
         );
     }
@@ -74,7 +75,8 @@ class PollingDriverTraitTest extends PHPUnit_Framework_TestCase
                 $this->ttl
             );
 
-        $this->assertFalse(
+        $this->assertSame(
+            0,
             $result
         );
     }

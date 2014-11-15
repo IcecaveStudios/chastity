@@ -16,7 +16,7 @@ interface DriverInterface
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      * @param integer|float $timeout  How long to wait for the lock to be acquired, in seconds.
      *
-     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @return integer|float              The actual remaining TTL of the lock, (ie, 0 if the lock could not be acquired).
      * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function acquire($resource, $token, $ttl, $timeout);
@@ -28,7 +28,7 @@ interface DriverInterface
      * @param string        $token    The token originally passed to acquire().
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean                    True if the lock is acquired and has been extended; otherwise, false.
+     * @return integer|float              The actual remaining TTL of the lock, (ie, 0 if the lock could not be extended).
      * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function extend($resource, $token, $ttl);

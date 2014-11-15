@@ -1,13 +1,10 @@
--- KEYS[1] - the key that is used for the lock
--- ARGV[1] - the lock token
+local key   = KEYS[1]
+local token = ARGV[1]
 
--- If the lock key does not contain the given token then bail early ...
-if ARGV[1] ~= redis.call('GET', KEYS[1])
-then
+if token ~= redis.call('GET', key) then
     return false
 end
 
--- Delete the lock key ...
-redis.call('DEL', KEYS[1])
+redis.call('DEL', key)
 
 return true

@@ -3,7 +3,6 @@ namespace Icecave\Chastity\Driver\Redis;
 
 use Eloquent\Phony\Phpunit\Phony;
 use Icecave\Chastity\Driver\Exception\DriverUnavailableException;
-use InvalidArgumentException;
 use PHPUnit_Framework_TestCase;
 use Predis\ClientInterface;
 use Predis\CommunicationException;
@@ -34,11 +33,6 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
                     return sha1($script);
                 }
             );
-
-        $this
-            ->redisClient
-            ->evalsha
-            ->returns(true);
 
         $this->extendScript  = __DIR__ . '/../../../../src/Driver/Redis/redis-extend.lua';
         $this->releaseScript = __DIR__ . '/../../../../src/Driver/Redis/redis-release.lua';
@@ -108,22 +102,13 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testPollWithInvalidTtl()
-    {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'TTL must be greater than zero.'
-        );
-
-        $this->driver->poll(
-            '<resource>',
-            '<token>',
-            0
-        );
-    }
-
     public function testExtend()
     {
+        $this
+            ->redisClient
+            ->evalsha
+            ->returns(1500);
+
         $result = $this->driver->extend('<resource>', '<token>', 1.5);
 
         Phony::inOrder(
@@ -146,13 +131,19 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
                 )
         );
 
-        $this->assertTrue(
+        $this->assertSame(
+            1.5,
             $result
         );
     }
 
     public function testExtendOnlyLoadsScriptOnce()
     {
+        $this
+            ->redisClient
+            ->evalsha
+            ->returns(1500);
+
         $this->driver->extend('<resource>', '<token>', 1.5);
         $this->driver->extend('<resource>', '<token>', 1.5);
 
@@ -161,20 +152,6 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
             ->script
             ->once()
             ->called();
-    }
-
-    public function testExtendWithInvalidTtl()
-    {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'TTL must be greater than zero.'
-        );
-
-        $this->driver->extend(
-            '<resource>',
-            '<token>',
-            0
-        );
     }
 
     public function testExtendWithCommunicationException()
@@ -197,7 +174,12 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
 
     public function testRelease()
     {
-        $this->driver->release('<resource>', '<token>');
+        $this
+            ->redisClient
+            ->evalsha
+            ->returns(true);
+
+        $result = $this->driver->release('<resource>', '<token>');
 
         Phony::inOrder(
             $this
@@ -217,10 +199,31 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
                     '<token>'
                 )
         );
+
+        $this->assertTrue(
+            $result
+        );
+    }
+
+    public function testReleaseFailure()
+    {
+        $this
+            ->redisClient
+            ->evalsha
+            ->returns(false);
+
+        $this->assertFalse(
+            $this->driver->release('<resource>', '<token>')
+        );
     }
 
     public function testReleaseOnlyLoadsScriptOnce()
     {
+        $this
+            ->redisClient
+            ->evalsha
+            ->returns(true);
+
         $this->driver->release('<resource>', '<token>');
         $this->driver->release('<resource>', '<token>');
 
