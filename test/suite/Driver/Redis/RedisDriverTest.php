@@ -2,15 +2,18 @@
 namespace Icecave\Chastity\Driver\Redis;
 
 use Eloquent\Phony\Phpunit\Phony;
+use Icecave\Chastity\Driver\Exception\DriverUnavailableException;
 use InvalidArgumentException;
 use PHPUnit_Framework_TestCase;
 use Predis\ClientInterface;
+use Predis\CommunicationException;
 
 class RedisDriverTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->redisClient = Phony::mock(ClientInterface::class);
+        $this->redisClient            = Phony::mock(ClientInterface::class);
+        $this->communicationException = Phony::fullMock(CommunicationException::class)->mock();
 
         $this
             ->redisClient
@@ -87,6 +90,24 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testPollWithCommunicationException()
+    {
+        $this
+            ->redisClient
+            ->set
+            ->throws($this->communicationException);
+
+        $this->setExpectedException(
+            DriverUnavailableException::class
+        );
+
+        $result = $this->driver->poll(
+            '<resource>',
+            '<token>',
+            1.5
+        );
+    }
+
     public function testPollWithInvalidTtl()
     {
         $this->setExpectedException(
@@ -123,6 +144,23 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
             ->redisClient
             ->get
             ->calledWith('chastity:<resource>');
+    }
+
+    public function testIsAcquiredWithCommunicationException()
+    {
+        $this
+            ->redisClient
+            ->get
+            ->throws($this->communicationException);
+
+        $this->setExpectedException(
+            DriverUnavailableException::class
+        );
+
+        $result = $this->driver->isAcquired(
+            '<resource>',
+            '<token>'
+        );
     }
 
     public function testExtend()
@@ -180,6 +218,24 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testExtendWithCommunicationException()
+    {
+        $this
+            ->redisClient
+            ->evalsha
+            ->throws($this->communicationException);
+
+        $this->setExpectedException(
+            DriverUnavailableException::class
+        );
+
+        $result = $this->driver->extend(
+            '<resource>',
+            '<token>',
+            1
+        );
+    }
+
     public function testRelease()
     {
         $result = $this->driver->release('<resource>', '<token>');
@@ -218,5 +274,22 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
             ->script
             ->once()
             ->called();
+    }
+
+    public function testReleaseWithCommunicationException()
+    {
+        $this
+            ->redisClient
+            ->evalsha
+            ->throws($this->communicationException);
+
+        $this->setExpectedException(
+            DriverUnavailableException::class
+        );
+
+        $result = $this->driver->release(
+            '<resource>',
+            '<token>'
+        );
     }
 }

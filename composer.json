@@ -23,12 +23,16 @@
         "icecave/druid": "~1",
         "icecave/interlude": "~0.1.0",
         "icecave/isolator": "~3",
-        "predis/predis": "~1",
         "psr/log": "~1"
     },
     "require-dev": {
+        "eloquent/asplode": "~2",
         "eloquent/phony": "~0.1.0@dev",
-        "icecave/archer": "~1"
+        "icecave/archer": "~1",
+        "predis/predis": "~1"
+    },
+    "suggest": {
+        "predis/predis": "Allows use of the Redis lock driver."
     },
     "autoload": {
         "psr-4": {

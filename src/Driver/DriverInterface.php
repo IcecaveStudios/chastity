@@ -1,6 +1,8 @@
 <?php
 namespace Icecave\Chastity\Driver;
 
+use Icecave\Chastity\Driver\Exception\DriverUnavailableException;
+
 /**
  * A low-level lock implementation.
  */
@@ -14,7 +16,8 @@ interface DriverInterface
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      * @param integer|float $timeout  How long to wait for the lock to be acquired, in seconds.
      *
-     * @return boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function acquire($resource, $token, $ttl, $timeout);
 
@@ -24,7 +27,8 @@ interface DriverInterface
      * @param string $resource The locked resource.
      * @param string $token    The token originally passed to acquire().
      *
-     * @return boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function isAcquired($resource, $token);
 
@@ -35,7 +39,8 @@ interface DriverInterface
      * @param string        $token    The token originally passed to acquire().
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean True if the lock is acquired and has been extended; otherwise, false.
+     * @return boolean                    True if the lock is acquired and has been extended; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function extend($resource, $token, $ttl);
 
@@ -45,7 +50,8 @@ interface DriverInterface
      * @param string $resource The locked resource.
      * @param string $token    The token originally passed to acquire().
      *
-     * @return boolean True if the lock was previously acquired; otherwise, false.
+     * @return boolean                    True if the lock was previously acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function release($resource, $token);
 }

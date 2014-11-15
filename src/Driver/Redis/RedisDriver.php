@@ -2,9 +2,11 @@
 namespace Icecave\Chastity\Driver\Redis;
 
 use Icecave\Chastity\Driver\DriverInterface;
+use Icecave\Chastity\Driver\Exception\DriverUnavailableException;
 use Icecave\Chastity\Driver\PollingDriverTrait;
 use InvalidArgumentException;
 use Predis\ClientInterface;
+use Predis\CommunicationException;
 
 class RedisDriver implements DriverInterface
 {
@@ -25,17 +27,22 @@ class RedisDriver implements DriverInterface
      * @param string        $token    The unique token representing the acquisition request.
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function poll($resource, $token, $ttl)
     {
-        return (bool) $this->redisClient->set(
-            $this->generateKey($resource),
-            $token,
-            'PX',
-            $this->convertTimeToLive($ttl),
-            'NX'
-        );
+        try {
+            return (bool) $this->redisClient->set(
+                $this->generateKey($resource),
+                $token,
+                'PX',
+                $this->convertTimeToLive($ttl),
+                'NX'
+            );
+        } catch (CommunicationException $e) {
+            throw new DriverUnavailableException($e);
+        }
     }
 
     /**
@@ -44,13 +51,18 @@ class RedisDriver implements DriverInterface
      * @param string $resource The locked resource.
      * @param string $token    The token originally passed to acquire().
      *
-     * @return boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function isAcquired($resource, $token)
     {
-        return $token === $this->redisClient->get(
-            $this->generateKey($resource)
-        );
+        try {
+            return $token === $this->redisClient->get(
+                $this->generateKey($resource)
+            );
+        } catch (CommunicationException $e) {
+            throw new DriverUnavailableException($e);
+        }
     }
 
     /**
@@ -60,24 +72,29 @@ class RedisDriver implements DriverInterface
      * @param string        $token    The token originally passed to acquire().
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean True if the lock is acquired and has been extended; otherwise, false.
+     * @return boolean                    True if the lock is acquired and has been extended; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function extend($resource, $token, $ttl)
     {
-        if (!$this->extendHash) {
-            $this->extendHash = $this->redisClient->script(
-                'LOAD',
-                file_get_contents(__DIR__ . '/redis-extend.lua')
-            );
-        }
+        try {
+            if (!$this->extendHash) {
+                $this->extendHash = $this->redisClient->script(
+                    'LOAD',
+                    file_get_contents(__DIR__ . '/redis-extend.lua')
+                );
+            }
 
-        return (bool) $this->redisClient->evalsha(
-            $this->extendHash,
-            1,
-            $this->generateKey($resource),
-            $token,
-            $this->convertTimeToLive($ttl)
-        );
+            return (bool) $this->redisClient->evalsha(
+                $this->extendHash,
+                1,
+                $this->generateKey($resource),
+                $token,
+                $this->convertTimeToLive($ttl)
+            );
+        } catch (CommunicationException $e) {
+            throw new DriverUnavailableException($e);
+        }
     }
 
     /**
@@ -86,23 +103,28 @@ class RedisDriver implements DriverInterface
      * @param string $resource The locked resource.
      * @param string $token    The token originally passed to acquire().
      *
-     * @return boolean True if the lock was previously acquired; otherwise, false.
+     * @return boolean                    True if the lock was previously acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function release($resource, $token)
     {
-        if (!$this->releaseHash) {
-            $this->releaseHash = $this->redisClient->script(
-                'LOAD',
-                file_get_contents(__DIR__ . '/redis-release.lua')
-            );
-        }
+        try {
+            if (!$this->releaseHash) {
+                $this->releaseHash = $this->redisClient->script(
+                    'LOAD',
+                    file_get_contents(__DIR__ . '/redis-release.lua')
+                );
+            }
 
-        return (bool) $this->redisClient->evalsha(
-            $this->releaseHash,
-            1,
-            $this->generateKey($resource),
-            $token
-        );
+            return (bool) $this->redisClient->evalsha(
+                $this->releaseHash,
+                1,
+                $this->generateKey($resource),
+                $token
+            );
+        } catch (CommunicationException $e) {
+            throw new DriverUnavailableException($e);
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Icecave\Chastity\Driver;
 
+use Icecave\Chastity\Driver\Exception\DriverUnavailableException;
 use Icecave\Interlude\Exception\TimeoutException;
 use Icecave\Interlude\Invoker;
 use Icecave\Interlude\InvokerInterface;
@@ -18,7 +19,8 @@ trait PollingDriverTrait
      * @param string        $token    The unique token representing the acquisition request.
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      *
-     * @return boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     abstract public function poll($resource, $token, $ttl);
 
@@ -30,7 +32,8 @@ trait PollingDriverTrait
      * @param integer|float $ttl      How long the lock should persist, in seconds.
      * @param integer|float $timeout  How long to wait for the lock to be acquired, in seconds.
      *
-     * @return boolean True if the lock is acquired; otherwise, false.
+     * @return boolean                    True if the lock is acquired; otherwise, false.
+     * @throws DriverUnavailableException if the driver is not available at the current time.
      */
     public function acquire($resource, $token, $ttl, $timeout)
     {
