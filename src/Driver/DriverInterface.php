@@ -22,17 +22,6 @@ interface DriverInterface
     public function acquire($resource, $token, $ttl, $timeout);
 
     /**
-     * Check if the given token still represents an acquired lock.
-     *
-     * @param string $resource The locked resource.
-     * @param string $token    The token originally passed to acquire().
-     *
-     * @return boolean                    True if the lock is acquired; otherwise, false.
-     * @throws DriverUnavailableException if the driver is not available at the current time.
-     */
-    public function isAcquired($resource, $token);
-
-    /**
      * Extend the TTL of a lock that has already been acquired.
      *
      * @param string        $resource The locked resource.

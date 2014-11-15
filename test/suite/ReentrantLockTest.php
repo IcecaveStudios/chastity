@@ -2,8 +2,7 @@
 namespace Icecave\Chastity;
 
 use Eloquent\Phony\Phpunit\Phony;
-use Icecave\Chastity\Exception\LockAcquisitionException;
-use Icecave\Chastity\Exception\LockNotAcquiredException;
+use Icecave\Chastity\Exception\LockException;
 use PHPUnit_Framework_TestCase;
 
 class ReentrantLockTest extends PHPUnit_Framework_TestCase
@@ -22,11 +21,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->tryAcquire
             ->returns(true);
 
-        $this
-            ->innerLock
-            ->isAcquired
-            ->returns(true);
-
         $this->ttl     = 10;
         $this->timeout = 30;
 
@@ -43,81 +37,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testIsAcquired()
-    {
-        $this->assertFalse(
-            $this->lock->isAcquired()
-        );
-
-        // The internal state should indicate that no lock is acquired and hence
-        // the driver will not be asked ...
-        $this
-            ->innerLock
-            ->isAcquired
-            ->never()
-            ->called();
-
-        $this->lock->tryAcquire($this->ttl);
-
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
-
-        // The internal state should indicate that the lock has been acquired,
-        // so the driver is asked to ensure that lock is still held ...
-        $this
-            ->innerLock
-            ->isAcquired
-            ->once()
-            ->called();
-    }
-
-    public function testIsAcquiredAfterFailedAcquisition()
-    {
-        $this
-            ->innerLock
-            ->tryAcquire
-            ->returns(false);
-
-        $this->lock->tryAcquire($this->ttl);
-
-        $this->assertFalse(
-            $this->lock->isAcquired()
-        );
-
-        // The internal state should indicate that no lock is acquired and hence
-        // the driver will not be asked ...
-        $this
-            ->innerLock
-            ->isAcquired
-            ->never()
-            ->called();
-    }
-
-    public function testIsAcquiredWhenLockHasExpired()
-    {
-        $this
-            ->innerLock
-            ->isAcquired
-            ->returns(false);
-
-        $this->lock->tryAcquire($this->ttl);
-
-        $this->assertFalse(
-            $this->lock->isAcquired()
-        );
-
-        $this->assertFalse(
-            $this->lock->isAcquired()
-        );
-
-        $this
-            ->innerLock
-            ->isAcquired
-            ->once()
-            ->called();
-    }
-
     public function testAcquire()
     {
         $this->lock->acquire($this->ttl);
@@ -127,10 +46,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->acquire
             ->once()
             ->calledWith($this->ttl, INF);
-
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
     }
 
     public function testAcquireWithTimeout()
@@ -142,10 +57,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->acquire
             ->once()
             ->calledWith($this->ttl, $this->timeout);
-
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
     }
 
     public function testAcquireFailure()
@@ -154,23 +65,15 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->innerLock
             ->acquire
             ->throws(
-                new LockAcquisitionException('<resource>')
+                new LockException('<resource>')
             );
 
         $this->setExpectedException(
-            LockAcquisitionException::class,
+            LockException::class,
             'Unable to acquire lock: <resource>.'
         );
 
-        try {
-            $this->lock->acquire($this->ttl);
-        } catch (LockAcquisitionException $e) {
-            $this->assertFalse(
-                $this->lock->isAcquired()
-            );
-
-            throw $e;
-        }
+        $this->lock->acquire($this->ttl);
     }
 
     public function testTryAcquire()
@@ -186,10 +89,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(
             $isAcquired
         );
-
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
     }
 
     public function testTryAcquireWithTimeout()
@@ -204,10 +103,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(
             $isAcquired
-        );
-
-        $this->assertTrue(
-            $this->lock->isAcquired()
         );
     }
 
@@ -243,20 +138,17 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->release
             ->once()
             ->called();
-
-        $this->assertFalse(
-            $this->lock->isAcquired()
-        );
     }
 
     public function testReleaseWhenNotAcquired()
     {
-        $this->setExpectedException(
-            LockNotAcquiredException::class,
-            'Lock has not been acquired: <resource>.'
-        );
-
         $this->lock->release();
+
+        $this
+            ->innerLock
+            ->release
+            ->never()
+            ->called();
     }
 
     public function testNestedAcquisition()
@@ -264,9 +156,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
         // First acquisition ...
         $this->assertTrue(
             $this->lock->tryAcquire($this->ttl)
-        );
-        $this->assertTrue(
-            $this->lock->isAcquired()
         );
 
         $this
@@ -279,17 +168,10 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(
             $this->lock->tryAcquire($this->ttl)
         );
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
 
         // Third acquisition ...
         // Note use of acquire() instead of tryAcquire(), they must be able to be mixed in this manner.
         $this->lock->acquire($this->ttl);
-
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
 
         // Even after third acquisition the lock is only actually acquried
         // once ...
@@ -314,10 +196,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->never()
             ->called();
 
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
-
         // Second release ...
         $this->lock->release();
 
@@ -327,10 +205,6 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->never()
             ->called();
 
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
-
         // Third release ...
         $this->lock->release();
 
@@ -339,9 +213,5 @@ class ReentrantLockTest extends PHPUnit_Framework_TestCase
             ->release
             ->once()
             ->called();
-
-        $this->assertFalse(
-            $this->lock->isAcquired()
-        );
     }
 }

@@ -1,9 +1,8 @@
 <?php
 namespace Icecave\Chastity;
 
-use Icecave\Chastity\Exception\LockAcquisitionException;
 use Icecave\Chastity\Exception\LockDetachedException;
-use Icecave\Chastity\Exception\LockNotAcquiredException;
+use Icecave\Chastity\Exception\LockException;
 
 /**
  * Automatically releases an underlying lock upon destruction.
@@ -23,14 +22,8 @@ class ScopedLock implements ScopedLockInterface
      */
     public function __destruct()
     {
-        if (!$this->lock) {
-            return;
-        }
-
-        try {
+        if ($this->lock) {
             $this->lock->release();
-        } catch (LockNotAcquiredException $e) {
-            // ignore ...
         }
     }
 
@@ -71,30 +64,14 @@ class ScopedLock implements ScopedLockInterface
     }
 
     /**
-     * Check if this lock has been acquired.
-     *
-     * @return boolean               True if this lock is currently acquired by this process.
-     * @throws LockDetachedException if the lock has been detached.
-     */
-    public function isAcquired()
-    {
-        if (!$this->lock) {
-            throw new LockDetachedException;
-        }
-
-        return $this->lock->isAcquired();
-    }
-
-    /**
      * Attempt to acquire this lock and throw an exception if acquisition
      * is unsuccessful.
      *
      * @param integer|float $ttl     How long the lock should persist, in seconds.
      * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @throws LockAcquisitionException     if the lock can not be acquired.
-     * @throws LockAlreadyAcquiredException if the lock is already acquired.
-     * @throws LockDetachedException        if the lock has been detached.
+     * @throws LockException         if the lock can not be acquired.
+     * @throws LockDetachedException if the lock has been detached.
      */
     public function acquire($ttl, $timeout = INF)
     {
@@ -111,9 +88,8 @@ class ScopedLock implements ScopedLockInterface
      * @param integer|float $ttl     How long the lock should persist, in seconds.
      * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @return boolean                      True if the lock is acquired; otherwise, false.
-     * @throws LockAlreadyAcquiredException if the lock is already acquired.
-     * @throws LockDetachedException        if the lock has been detached.
+     * @return boolean               True if the lock is acquired; otherwise, false.
+     * @throws LockDetachedException if the lock has been detached.
      */
     public function tryAcquire($ttl, $timeout = INF)
     {
@@ -144,8 +120,7 @@ class ScopedLock implements ScopedLockInterface
     /**
      * Release this lock.
      *
-     * @throws LockNotAcquiredException if the lock has not been acquired.
-     * @throws LockDetachedException    if the lock has been detached.
+     * @throws LockDetachedException if the lock has been detached.
      */
     public function release()
     {

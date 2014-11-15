@@ -1,8 +1,7 @@
 <?php
 namespace Icecave\Chastity;
 
-use Icecave\Chastity\Exception\LockAcquisitionException;
-use Icecave\Chastity\Exception\LockNotAcquiredException;
+use Icecave\Chastity\Exception\LockException;
 
 /**
  * Wraps an existing lock to provide reentrancy support.
@@ -29,32 +28,13 @@ class ReentrantLock implements LockInterface
     }
 
     /**
-     * Check if this lock has been acquired.
-     *
-     * @return boolean True if this lock is currently acquired by this process.
-     */
-    public function isAcquired()
-    {
-        if (!$this->count) {
-            return false;
-        } elseif ($this->lock->isAcquired()) {
-            return true;
-        }
-
-        $this->count = 0;
-
-        return false;
-    }
-
-    /**
      * Attempt to acquire this lock and throw an exception if acquisition
      * is unsuccessful.
      *
      * @param integer|float $ttl     How long the lock should persist, in seconds.
      * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @throws LockAcquisitionException     if the lock can not be acquired.
-     * @throws LockAlreadyAcquiredException if the lock is already acquired.
+     * @throws LockException if the lock can not be acquired.
      */
     public function acquire($ttl, $timeout = INF)
     {
@@ -71,8 +51,7 @@ class ReentrantLock implements LockInterface
      * @param integer|float $ttl     How long the lock should persist, in seconds.
      * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @return boolean                      True if the lock is acquired; otherwise, false.
-     * @throws LockAlreadyAcquiredException if the lock is already acquired.
+     * @return boolean True if the lock is acquired; otherwise, false.
      */
     public function tryAcquire($ttl, $timeout = INF)
     {
@@ -93,7 +72,7 @@ class ReentrantLock implements LockInterface
      *
      * @param integer|float $ttl How long the lock should persist, in seconds.
      *
-     * @throws LockNotAcquiredException if the lock has not been acquired.
+     * @throws LockException if the lock has not been acquired.
      */
     public function extend($ttl)
     {
@@ -102,13 +81,11 @@ class ReentrantLock implements LockInterface
 
     /**
      * Release this lock.
-     *
-     * @throws LockNotAcquiredException if the lock has not been acquired.
      */
     public function release()
     {
         if (0 === $this->count) {
-            throw new LockNotAcquiredException($this->lock->resource());
+            return;
         } elseif (0 === --$this->count) {
             $this->lock->release();
         }

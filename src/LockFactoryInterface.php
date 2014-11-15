@@ -1,7 +1,7 @@
 <?php
 namespace Icecave\Chastity;
 
-use Icecave\Chastity\Exception\LockAcquisitionException;
+use Icecave\Chastity\Exception\LockException;
 
 interface LockFactoryInterface
 {
@@ -39,8 +39,8 @@ interface LockFactoryInterface
      * @param integer|float|null $ttl      How long the lock should persist, in seconds, or null to use the default.
      * @param integer|float      $timeout  How long to wait for lock acquisition, in seconds.
      *
-     * @return ScopedLockInterface      An acquired lock for the given resource.
-     * @throws LockAcquisitionException if the lock can not be acquired.
+     * @return ScopedLockInterface An acquired lock for the given resource.
+     * @throws LockException       if the lock can not be acquired.
      */
     public function acquire($resource, $ttl = null, $timeout = INF);
 

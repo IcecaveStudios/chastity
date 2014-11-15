@@ -2,7 +2,7 @@
 namespace Icecave\Chastity;
 
 use Icecave\Chastity\Driver\DriverInterface;
-use Icecave\Chastity\Exception\LockAcquisitionException;
+use Icecave\Chastity\Exception\LockException;
 use Icecave\Druid\UuidGeneratorInterface;
 use Icecave\Druid\UuidVersion4Generator;
 use Psr\Log\LoggerAwareInterface;
@@ -88,8 +88,8 @@ class LockFactory implements LockFactoryInterface, LoggerAwareInterface
      * @param integer|float|null $ttl      How long the lock should persist, in seconds, or null to use the default.
      * @param integer|float      $timeout  How long to wait for lock acquisition, in seconds.
      *
-     * @return LockInterface            An acquired lock for the given resource.
-     * @throws LockAcquisitionException if the lock can not be acquired.
+     * @return LockInterface An acquired lock for the given resource.
+     * @throws LockException if the lock can not be acquired.
      */
     public function acquire($resource, $ttl = null, $timeout = INF)
     {

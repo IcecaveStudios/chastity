@@ -28,6 +28,9 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             DriverInterface::class,
             $this->driver
         );
+
+        // Use of this variableindicates that the TTL is not relevant to the test.
+        $this->irrelevantTtl = 600;
     }
 
     public function testAcquire()
@@ -36,7 +39,7 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             $this->driver->acquire(
                 '<resource>',
                 '<token-1>',
-                10,
+                $this->irrelevantTtl,
                 0
             )
         );
@@ -45,7 +48,7 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
-                10,
+                $this->irrelevantTtl,
                 0
             )
         );
@@ -56,18 +59,20 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(
             $this->driver->acquire(
                 '<resource>',
-                '<token>',
+                '<token-1>',
                 1,
                 0
             )
         );
 
-        sleep(1);
+        usleep(1.1 * 1000000);
 
-        $this->assertFalse(
-            $this->driver->isAcquired(
+        $this->assertTrue(
+            $this->driver->acquire(
                 '<resource>',
-                '<token>'
+                '<token-2>',
+                $this->irrelevantTtl,
+                0
             )
         );
     }
@@ -87,55 +92,8 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             $this->driver->acquire(
                 '<resource>',
                 '<token-2>',
-                10,
+                $this->irrelevantTtl,
                 2
-            )
-        );
-
-        $this->assertFalse(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token-1>'
-            )
-        );
-    }
-
-    public function testIsAcquired()
-    {
-        $this->assertFalse(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token>'
-            )
-        );
-
-        $this->assertTrue(
-            $this->driver->acquire(
-                '<resource>',
-                '<token>',
-                10,
-                0
-            )
-        );
-
-        $this->assertTrue(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token>'
-            )
-        );
-
-        $this->assertTrue(
-            $this->driver->release(
-                '<resource>',
-                '<token>'
-            )
-        );
-
-        $this->assertFalse(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token>'
             )
         );
     }
@@ -148,7 +106,7 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(
             $this->driver->acquire(
                 '<resource>',
-                '<token>',
+                '<token-1>',
                 1,
                 0
             )
@@ -157,33 +115,30 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(
             $this->driver->extend(
                 '<resource>',
-                '<token>',
+                '<token-1>',
                 1
             )
         );
 
-        $this->assertTrue(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token>'
-            )
-        );
-
-        usleep(1.75 * 1000000);
-
-        $this->assertTrue(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token>'
-            )
-        );
-
-        usleep(0.5 * 1000000);
+        usleep(1.1 * 1000000);
 
         $this->assertFalse(
-            $this->driver->isAcquired(
+            $this->driver->acquire(
                 '<resource>',
-                '<token>'
+                '<token-2>',
+                $this->irrelevantTtl,
+                0
+            )
+        );
+
+        usleep(1 * 1000000);
+
+        $this->assertTrue(
+            $this->driver->acquire(
+                '<resource>',
+                '<token-2>',
+                $this->irrelevantTtl,
+                0
             )
         );
     }
@@ -207,26 +162,14 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertTrue(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token-1>'
-            )
-        );
-
-        $this->assertFalse(
-            $this->driver->isAcquired(
-                '<resource>',
-                '<token-2>'
-            )
-        );
-
         usleep(1.1 * 1000000);
 
-        $this->assertFalse(
-            $this->driver->isAcquired(
+        $this->assertTrue(
+            $this->driver->acquire(
                 '<resource>',
-                '<token-1>'
+                '<token-2>',
+                $this->irrelevantTtl,
+                0
             )
         );
     }
@@ -277,10 +220,12 @@ abstract class AbstractIntegrationTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertTrue(
-            $this->driver->isAcquired(
+        $this->assertFalse(
+            $this->driver->acquire(
                 '<resource>',
-                '<token-1>'
+                '<token-2>',
+                $this->irrelevantTtl,
+                0
             )
         );
     }

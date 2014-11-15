@@ -7,7 +7,7 @@ use RuntimeException;
 /**
  * Indicates that an attempt to acquire a lock has failed.
  */
-class LockAcquisitionException extends RuntimeException
+class LockException extends RuntimeException
 {
     /**
      * @param string         $resource The resource being locked.

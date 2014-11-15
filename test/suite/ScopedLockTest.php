@@ -3,7 +3,6 @@ namespace Icecave\Chastity;
 
 use Eloquent\Phony\Phpunit\Phony;
 use Icecave\Chastity\Exception\LockDetachedException;
-use Icecave\Chastity\Exception\LockNotAcquiredException;
 use PHPUnit_Framework_TestCase;
 
 class ScopedLockTest extends PHPUnit_Framework_TestCase
@@ -20,11 +19,6 @@ class ScopedLockTest extends PHPUnit_Framework_TestCase
         $this
             ->innerLock
             ->tryAcquire
-            ->returns(true);
-
-        $this
-            ->innerLock
-            ->isAcquired
             ->returns(true);
 
         $this->ttl     = 10;
@@ -56,22 +50,6 @@ class ScopedLockTest extends PHPUnit_Framework_TestCase
             ->innerLock
             ->release
             ->never()
-            ->called();
-    }
-
-    public function testDestructSilencesReleaseFailures()
-    {
-        $this
-            ->innerLock
-            ->release
-            ->throws(new LockNotAcquiredException('<resource>'));
-
-        $this->lock->__destruct();
-
-        $this
-            ->innerLock
-            ->release
-            ->once()
             ->called();
     }
 
@@ -111,31 +89,6 @@ class ScopedLockTest extends PHPUnit_Framework_TestCase
         );
 
         $this->lock->resource();
-    }
-
-    public function testIsAcquired()
-    {
-        $this->assertTrue(
-            $this->lock->isAcquired()
-        );
-
-        // The internal state should indicate that no lock is acquired and hence
-        // the driver will not be asked ...
-        $this
-            ->innerLock
-            ->isAcquired
-            ->called();
-    }
-
-    public function testIsAcquiredWhenDetached()
-    {
-        $this->lock->detach();
-
-        $this->setExpectedException(
-            LockDetachedException::class
-        );
-
-        $this->lock->isAcquired();
     }
 
     public function testAcquire()

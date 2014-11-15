@@ -122,47 +122,6 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testIsAcquired()
-    {
-        $this->assertTrue(
-            $this->driver->isAcquired('<resource>', '<token>')
-        );
-
-        $this
-            ->redisClient
-            ->get
-            ->calledWith('chastity:<resource>');
-    }
-
-    public function testIsAcquiredFailure()
-    {
-        $this->assertFalse(
-            $this->driver->isAcquired('<resource>', '<different-token>')
-        );
-
-        $this
-            ->redisClient
-            ->get
-            ->calledWith('chastity:<resource>');
-    }
-
-    public function testIsAcquiredWithCommunicationException()
-    {
-        $this
-            ->redisClient
-            ->get
-            ->throws($this->communicationException);
-
-        $this->setExpectedException(
-            DriverUnavailableException::class
-        );
-
-        $result = $this->driver->isAcquired(
-            '<resource>',
-            '<token>'
-        );
-    }
-
     public function testExtend()
     {
         $result = $this->driver->extend('<resource>', '<token>', 1.5);
@@ -238,7 +197,7 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
 
     public function testRelease()
     {
-        $result = $this->driver->release('<resource>', '<token>');
+        $this->driver->release('<resource>', '<token>');
 
         Phony::inOrder(
             $this
@@ -257,10 +216,6 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
                     'chastity:<resource>',
                     '<token>'
                 )
-        );
-
-        $this->assertTrue(
-            $result
         );
     }
 

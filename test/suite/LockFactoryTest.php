@@ -33,11 +33,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             ->acquire
             ->returns(true);
 
-        $this
-            ->driver
-            ->isAcquired
-            ->returns(true);
-
         $this->ttl     = 10;
         $this->timeout = 30;
 
@@ -100,9 +95,11 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             $lock
         );
 
-        $this->assertFalse(
-            $lock->isAcquired()
-        );
+        $this
+            ->driver
+            ->acquire
+            ->never()
+            ->called();
     }
 
     public function testCreateWithLogger()
@@ -127,10 +124,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             $expected,
             $lock
         );
-
-        $this->assertFalse(
-            $lock->isAcquired()
-        );
     }
 
     public function testAcquire()
@@ -140,10 +133,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             ScopedLockInterface::class,
             $lock
-        );
-
-        $this->assertTrue(
-            $lock->isAcquired()
         );
 
         $this
@@ -166,10 +155,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             $lock
         );
 
-        $this->assertTrue(
-            $lock->isAcquired()
-        );
-
         $this
             ->driver
             ->acquire
@@ -188,10 +173,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             ScopedLockInterface::class,
             $lock
-        );
-
-        $this->assertTrue(
-            $lock->isAcquired()
         );
 
         $this
@@ -214,10 +195,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             $lock
         );
 
-        $this->assertTrue(
-            $lock->isAcquired()
-        );
-
         $this
             ->driver
             ->acquire
@@ -238,10 +215,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
             $lock
         );
 
-        $this->assertTrue(
-            $lock->isAcquired()
-        );
-
         $this
             ->driver
             ->acquire
@@ -260,10 +233,6 @@ class LockFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             ScopedLockInterface::class,
             $lock
-        );
-
-        $this->assertTrue(
-            $lock->isAcquired()
         );
 
         $this
