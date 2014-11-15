@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="robots" content="index, follow, all" />
-        <title>Icecave\Chastity\Exception\LockNotAcquiredException | icecave/chastity API</title>
+        <title>Icecave\Chastity\Exception\LockException | icecave/chastity API</title>
                     <link rel="stylesheet" type="text/css" href="../../../stylesheet.css">
                             </head>
         <body id="class">
@@ -19,13 +19,13 @@
         <div id="title">icecave/chastity API</div>
 
             <div class="type">Class</div>
-    <h1><a href="../../../Icecave/Chastity/Exception.html">Icecave\Chastity\Exception</a>\LockNotAcquiredException</h1>
+    <h1><a href="../../../Icecave/Chastity/Exception.html">Icecave\Chastity\Exception</a>\LockException</h1>
     </div>
         <div class="content">
-                <p>class    <strong>LockNotAcquiredException</strong>        extends <a href="http://php.net/LogicException"><abbr title="LogicException">LogicException</abbr></a></p>
+                <p>class    <strong>LockException</strong>        extends <a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></p>
 
             <div class="description">
-            <p>An operation that requires a lock to be acquired can not be performed because the lock has NOT been acquired.</p>
+            <p>Indicates that an attempt to acquire a lock has failed.</p>
             <p>
 </p>
         </div>
@@ -52,7 +52,7 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 17</div>
+        <div class="location">at line 16</div>
         <code>            public            
     <strong>__construct</strong>(string $resource, <a href="http://php.net/Exception"><abbr title="Exception">Exception</abbr></a> $previous = null)</code>
     </h3>
@@ -68,7 +68,7 @@
                     <tr>
                 <td>string</td>
                 <td>$resource</td>
-                <td>The resource that is not locked.</td>
+                <td>The resource being locked.</td>
             </tr>
                     <tr>
                 <td><a href="http://php.net/Exception"><abbr title="Exception">Exception</abbr></a></td>

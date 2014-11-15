@@ -42,16 +42,6 @@
             </tr>
                     <tr>
                 <td class="type">
-                    boolean
-                </td>
-                <td class="last">
-                    <a href="#method_isAcquired">isAcquired</a>()
-                    <p>Check if this lock has been acquired.</p>
-                </td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td class="type">
                     
                 </td>
                 <td class="last">
@@ -96,7 +86,7 @@
         <h2>Details</h2>
 
                         <h3 id="method_resource">
-        <div class="location">at line 15</div>
+        <div class="location">at line 13</div>
         <code>            public            string
     <strong>resource</strong>()</code>
     </h3>
@@ -120,33 +110,8 @@
                     </div>
     </div>
 
-                <h3 id="method_isAcquired">
-        <div class="location">at line 22</div>
-        <code>            public            boolean
-    <strong>isAcquired</strong>()</code>
-    </h3>
-    <div class="details">
-        <p>Check if this lock has been acquired.</p>
-        <p>
-</p>
-        <div class="tags">
-            
-                            <h4>Return Value</h4>
-
-                    <table>
-        <tr>
-            <td>boolean</td>
-            <td>True if this lock is currently acquired by this process.</td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
                 <h3 id="method_acquire">
-        <div class="location">at line 34</div>
+        <div class="location">at line 24</div>
         <code>            public            
     <strong>acquire</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
@@ -176,12 +141,8 @@
 
                     <table>
                     <tr>
-                <td><abbr title="LockAcquisitionException">LockAcquisitionException</abbr></td>
+                <td><abbr title="LockException">LockException</abbr></td>
                 <td>if the lock can not be acquired.</td>
-            </tr>
-                    <tr>
-                <td><abbr title="LockAlreadyAcquiredException">LockAlreadyAcquiredException</abbr></td>
-                <td>if the lock is already acquired.</td>
             </tr>
             </table>
 
@@ -190,7 +151,7 @@
     </div>
 
                 <h3 id="method_tryAcquire">
-        <div class="location">at line 45</div>
+        <div class="location">at line 34</div>
         <code>            public            boolean
     <strong>tryAcquire</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl, integer|<abbr title="Icecave\Chastity\float">float</abbr> $timeout = INF)</code>
     </h3>
@@ -225,21 +186,12 @@
     </table>
 
             
-                            <h4>Exceptions</h4>
-
-                    <table>
-                    <tr>
-                <td><abbr title="LockAlreadyAcquiredException">LockAlreadyAcquiredException</abbr></td>
-                <td>if the lock is already acquired.</td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
 
                 <h3 id="method_extend">
-        <div class="location">at line 54</div>
+        <div class="location">at line 43</div>
         <code>            public            
     <strong>extend</strong>(integer|<abbr title="Icecave\Chastity\float">float</abbr> $ttl)</code>
     </h3>
@@ -264,7 +216,7 @@
 
                     <table>
                     <tr>
-                <td><abbr title="LockNotAcquiredException">LockNotAcquiredException</abbr></td>
+                <td><abbr title="LockException">LockException</abbr></td>
                 <td>if the lock has not been acquired.</td>
             </tr>
             </table>
@@ -274,7 +226,7 @@
     </div>
 
                 <h3 id="method_release">
-        <div class="location">at line 61</div>
+        <div class="location">at line 48</div>
         <code>            public            
     <strong>release</strong>()</code>
     </h3>
@@ -285,15 +237,6 @@
         <div class="tags">
             
             
-                            <h4>Exceptions</h4>
-
-                    <table>
-                    <tr>
-                <td><abbr title="LockNotAcquiredException">LockNotAcquiredException</abbr></td>
-                <td>if the lock has not been acquired.</td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
