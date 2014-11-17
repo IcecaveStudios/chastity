@@ -1,0 +1,21 @@
+language: php
+
+php: ["5.5", "5.6", "hhvm", "hhvm-nightly"]
+
+matrix:
+    allow_failures: [{"php": "hhvm"}, {"php": "hhvm-nightly"}]
+    fast_finish: true
+
+env:
+  global:
+    - ARCHER_PUBLISH_VERSION=5.6
+    - secure: "jGD1CVczprc1lzMJGfzydFNKIEuLJbrfmInonn0jcH1y1y/+T3y52rwYS4VZDyx9NzD+DLQxEFaxf/IomeyFkf9rAySapxcvuHGd766bpRKcTaf+Ufau4GbAQLrLtlER6TBnbycNyaQldMS45GFD0S3TXfn0T2STW6mtXnltEYw="
+
+install:
+  - ./.travis.install
+
+script:
+  - ./vendor/bin/archer travis:build
+
+services:
+  - redis-server

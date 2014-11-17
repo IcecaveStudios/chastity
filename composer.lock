@@ -4,20 +4,137 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d2bbc272789039a1c619eb066d22611c",
+    "hash": "7548b8a035ade5615e5e799a5bb465ba",
     "packages": [
         {
-            "name": "icecave/isolator",
-            "version": "2.3.0",
+            "name": "icecave/druid",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/IcecaveStudios/isolator.git",
-                "reference": "97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5"
+                "url": "https://github.com/IcecaveStudios/druid.git",
+                "reference": "9cbb2768c6f049ac7ba577cbd821cb10425eb628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5",
-                "reference": "97c51fafa39c57a8f1a31f978a48fbe6cea4a5d5",
+                "url": "https://api.github.com/repos/IcecaveStudios/druid/zipball/9cbb2768c6f049ac7ba577cbd821cb10425eb628",
+                "reference": "9cbb2768c6f049ac7ba577cbd821cb10425eb628",
+                "shasum": ""
+            },
+            "require": {
+                "icecave/isolator": "~2|~3",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Icecave\\Druid\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Harris",
+                    "email": "james.harris@icecave.com.au",
+                    "homepage": "https://github.com/jmalloc"
+                }
+            ],
+            "description": "An RFC-4122 compliant library for generating and parsing universally unique identifiers (UUIDs).",
+            "homepage": "https://github.com/IcecaveStudios/druid",
+            "keywords": [
+                "4122",
+                "RFC-4122",
+                "global",
+                "guid",
+                "id",
+                "identifer",
+                "random",
+                "rfc4122",
+                "unique",
+                "universal",
+                "universally",
+                "uuid"
+            ],
+            "time": "2014-11-08 08:34:19"
+        },
+        {
+            "name": "icecave/interlude",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IcecaveStudios/interlude.git",
+                "reference": "e347e6ed1f73b8949f171e46bb56ff4559a5d07d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IcecaveStudios/interlude/zipball/e347e6ed1f73b8949f171e46bb56ff4559a5d07d",
+                "reference": "e347e6ed1f73b8949f171e46bb56ff4559a5d07d",
+                "shasum": ""
+            },
+            "require": {
+                "icecave/isolator": "~3",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "eloquent/phony": "~0.1.0@dev",
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Icecave\\Interlude\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Harris",
+                    "email": "james.harris@icecave.com.au",
+                    "homepage": "https://github.com/jmalloc"
+                }
+            ],
+            "description": "Emulated timeouts for synchronous operations.",
+            "homepage": "https://github.com/IcecaveStudios/interlude",
+            "keywords": [
+                "async",
+                "repeat",
+                "retry",
+                "sync",
+                "timeout",
+                "ttl"
+            ],
+            "time": "2014-11-10 08:16:17"
+        },
+        {
+            "name": "icecave/isolator",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IcecaveStudios/isolator.git",
+                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
+                "reference": "e137a63f5f5ce480d65faa73babbdf58f2d74e0b",
                 "shasum": ""
             },
             "require": {
@@ -26,14 +143,19 @@
             "require-dev": {
                 "icecave/archer": "~1"
             },
-            "suggest": {
-                "eloquent/asplode": "Drop-in exception-based error handling."
-            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Icecave\\Isolator\\": "src"
-                }
+                },
+                "files": [
+                    "src/register-autoloader.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -49,48 +171,34 @@
             "description": "Dependency injection for global functions.",
             "homepage": "https://github.com/IcecaveStudios/isolator",
             "keywords": [
+                "Double",
                 "fake",
                 "mock",
-                "phake",
                 "phpunit",
+                "stub",
                 "test",
                 "unit"
             ],
-            "time": "2014-08-12 03:16:11"
+            "time": "2014-10-20 23:50:20"
         },
         {
-            "name": "predis/predis",
-            "version": "v1.0.0",
+            "name": "psr/log",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nrk/predis.git",
-                "reference": "d4be306d0aca28b5633b96adef03b29fea569c2f"
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/d4be306d0aca28b5633b96adef03b29fea569c2f",
-                "reference": "d4be306d0aca28b5633b96adef03b29fea569c2f",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
                 "shasum": ""
             },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "ext-curl": "Allows access to Webdis when paired with phpiredis",
-                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
-            },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
             "autoload": {
-                "psr-4": {
-                    "Predis\\": "src/"
+                "psr-0": {
+                    "Psr\\Log\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -99,19 +207,17 @@
             ],
             "authors": [
                 {
-                    "name": "Daniele Alessandri",
-                    "email": "suppakilla@gmail.com",
-                    "homepage": "http://clorophilla.net"
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
-            "description": "Flexible and feature-complete PHP client library for Redis",
-            "homepage": "http://github.com/nrk/predis",
+            "description": "Common interface for logging libraries",
             "keywords": [
-                "nosql",
-                "predis",
-                "redis"
+                "log",
+                "psr",
+                "psr-3"
             ],
-            "time": "2014-08-01 09:59:50"
+            "time": "2012-12-21 11:40:51"
         }
     ],
     "packages-dev": [
@@ -175,17 +281,68 @@
             "time": "2013-09-23 12:00:18"
         },
         {
+            "name": "eloquent/asplode",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eloquent/asplode.git",
+                "reference": "6c15bfa11d72b76be9b0a31a145dc2b122db455b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eloquent/asplode/zipball/6c15bfa11d72b76be9b0a31a145dc2b122db455b",
+                "reference": "6c15bfa11d72b76be9b0a31a145dc2b122db455b",
+                "shasum": ""
+            },
+            "require": {
+                "icecave/isolator": "~2|~3",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eloquent\\Asplode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erin Millard",
+                    "email": "ezzatron@gmail.com",
+                    "homepage": "http://ezzatron.com/"
+                }
+            ],
+            "description": "Drop-in exception-based error handling for PHP.",
+            "homepage": "https://github.com/eloquent/asplode",
+            "keywords": [
+                "error",
+                "errorexception",
+                "exception",
+                "failure",
+                "fault",
+                "handler",
+                "handling"
+            ],
+            "time": "2014-10-29 00:15:53"
+        },
+        {
             "name": "eloquent/phony",
             "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eloquent/phony.git",
-                "reference": "84454975384e1aca93a4c762452ff7ad4a93a350"
+                "reference": "c47746b9edd269ce69c1dbd9faf23e04f21c1f4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eloquent/phony/zipball/84454975384e1aca93a4c762452ff7ad4a93a350",
-                "reference": "84454975384e1aca93a4c762452ff7ad4a93a350",
+                "url": "https://api.github.com/repos/eloquent/phony/zipball/c47746b9edd269ce69c1dbd9faf23e04f21c1f4e",
+                "reference": "c47746b9edd269ce69c1dbd9faf23e04f21c1f4e",
                 "shasum": ""
             },
             "require": {
@@ -196,10 +353,12 @@
             "require-dev": {
                 "athletic/athletic": "~0.1",
                 "counterpart/counterpart": "~1",
+                "danielstjules/pho": "~1",
                 "eloquent/fixie": "~0.2.0@dev",
                 "hamcrest/hamcrest-php": "~1",
                 "icecave/isolator": "~3",
                 "mockery/mockery": "~0",
+                "peridot-php/peridot": "~1",
                 "phake/phake": "~1",
                 "phpspec/prophecy": "~1",
                 "phpunit/phpunit": "~4",
@@ -217,7 +376,9 @@
                 },
                 "files": [
                     "src/functions.php",
-                    "src/Phpunit/functions.php"
+                    "src/Pho/functions.php",
+                    "src/Phpunit/functions.php",
+                    "src/Simpletest/functions.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -244,7 +405,7 @@
                 "stubbing",
                 "test"
             ],
-            "time": "2014-11-06 23:09:43"
+            "time": "2014-11-13 03:15:09"
         },
         {
             "name": "guzzle/guzzle",
@@ -340,16 +501,16 @@
         },
         {
             "name": "icecave/archer",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/IcecaveStudios/archer.git",
-                "reference": "5b1b4748d0fd6a8f977486d15d10e52e68349379"
+                "reference": "a17abd703a794aefcc56816e4d0a169b29500c66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IcecaveStudios/archer/zipball/5b1b4748d0fd6a8f977486d15d10e52e68349379",
-                "reference": "5b1b4748d0fd6a8f977486d15d10e52e68349379",
+                "url": "https://api.github.com/repos/IcecaveStudios/archer/zipball/a17abd703a794aefcc56816e4d0a169b29500c66",
+                "reference": "a17abd703a794aefcc56816e4d0a169b29500c66",
                 "shasum": ""
             },
             "require": {
@@ -414,7 +575,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2014-09-18 03:05:28"
+            "time": "2014-11-10 21:59:53"
         },
         {
             "name": "nikic/php-parser",
@@ -560,23 +721,38 @@
             "time": "2013-03-08 08:21:40"
         },
         {
-            "name": "psr/log",
-            "version": "1.0.0",
+            "name": "predis/predis",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "d4be306d0aca28b5633b96adef03b29fea569c2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/d4be306d0aca28b5633b96adef03b29fea569c2f",
+                "reference": "d4be306d0aca28b5633b96adef03b29fea569c2f",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Predis\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -585,17 +761,19 @@
             ],
             "authors": [
                 {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
                 }
             ],
-            "description": "Common interface for logging libraries",
+            "description": "Flexible and feature-complete PHP client library for Redis",
+            "homepage": "http://github.com/nrk/predis",
             "keywords": [
-                "log",
-                "psr",
-                "psr-3"
+                "nosql",
+                "predis",
+                "redis"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2014-08-01 09:59:50"
         },
         {
             "name": "sami/sami",

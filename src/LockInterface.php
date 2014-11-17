@@ -1,52 +1,49 @@
 <?php
 namespace Icecave\Chastity;
 
-use Icecave\Chastity\Exception\LockAcquisitionException;
+use Icecave\Chastity\Exception\LockException;
 
 interface LockInterface
 {
     /**
-     * Release this lock.
+     * Get the resource to which this lock applies.
+     *
+     * @return string The resource to which this lock applies.
      */
-    public function __destruct();
+    public function resource();
 
     /**
-     * Get the name of this lock.
+     * Attempt to acquire this lock and throw an exception if acquisition is
+     * unsuccessful.
      *
-     * @return string The name of this lock.
+     * @param integer|float $ttl     How long the lock should persist, in seconds.
+     * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
+     *
+     * @throws LockException if the lock can not be acquired.
      */
-    public function name();
-
-    /**
-     * Check if this lock has been acquired by this process.
-     *
-     * @return boolean True if this lock is currently acquired by this process.
-     */
-    public function isAcquired();
-
-    /**
-     * Attempt to acquire this lock and throw an exception if the acquisition
-     * is uncessuccessful.
-     *
-     * @param integer|float|null $timeout How long to wait for lock acquisition.
-     *
-     * @throws LockAcquisitionException if the lock can not be acquired.
-     */
-    public function acquire($timeout = null);
+    public function acquire($ttl, $timeout = INF);
 
     /**
      * Attempt to acquire this lock.
      *
-     * @param integer|float|null $timeout How long to wait for lock acquisition.
+     * @param integer|float $ttl     How long the lock should persist, in seconds.
+     * @param integer|float $timeout How long to wait for lock acquisition, in seconds.
      *
-     * @throws boolean True if the lock is acquired; otherwise, false.
+     * @return boolean True if the lock is acquired; otherwise, false.
      */
-    public function tryAcquire($timeout = null);
+    public function tryAcquire($ttl, $timeout = INF);
+
+    /**
+     * Extend the TTL of this lock.
+     *
+     * @param integer|float $ttl How long the lock should persist, in seconds.
+     *
+     * @throws LockException if the lock has not been acquired.
+     */
+    public function extend($ttl);
 
     /**
      * Release this lock.
-     *
-     * A lock must be released the same number of times it has been acquired.
      */
     public function release();
 }
