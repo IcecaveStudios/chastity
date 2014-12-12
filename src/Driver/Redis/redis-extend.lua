@@ -9,6 +9,4 @@ end
 ttl = ttl + redis.call('PTTL', key)
 redis.call('PEXPIRE', key, ttl)
 
-redis.call('SET', 'lastTTL', ttl)
-
 return ttl
