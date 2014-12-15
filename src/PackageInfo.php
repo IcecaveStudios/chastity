@@ -4,5 +4,5 @@ namespace Icecave\Chastity;
 class PackageInfo
 {
     const NAME    = 'Chastity';
-    const VERSION = '0.1.0';
+    const VERSION = '0.1.1';
 }
