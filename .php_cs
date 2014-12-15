@@ -6,6 +6,7 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
 return Symfony\CS\Config\Config::create()
     ->fixers(array(
         '-concat_without_spaces',
+        '-empty_return',
         '-new_with_braces',
         'align_double_arrow',
         'align_equals',

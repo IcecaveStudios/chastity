@@ -27,7 +27,7 @@
     },
     "require-dev": {
         "eloquent/asplode": "~2",
-        "eloquent/phony": "~0.1.0@dev",
+        "eloquent/phony": "~0.2.0",
         "icecave/archer": "~1",
         "predis/predis": "~1"
     },
