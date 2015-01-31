@@ -71,18 +71,6 @@ class Lock implements LockInterface, LoggerAwareInterface
      */
     public function tryAcquire($ttl, $timeout = INF)
     {
-        if ($this->logger) {
-            $this->logger->debug(
-                'Resource "{resource}" lock request from {token} with {ttl} second TTL and {timeout} second timeout',
-                [
-                    'resource' => $this->resource,
-                    'token'    => $this->token,
-                    'ttl'      => $ttl,
-                    'timeout'  => $timeout,
-                ]
-            );
-        }
-
         $isAcquired = $this->driver->acquire(
             $this->resource,
             $this->token,
@@ -93,18 +81,24 @@ class Lock implements LockInterface, LoggerAwareInterface
         if ($this->logger) {
             if ($isAcquired) {
                 $this->logger->debug(
-                    'Resource "{resource}" successfully locked by {token}',
+                    'Resource "{resource}" locked by {token} with {ttl} second TTL',
                     [
                         'resource' => $this->resource,
                         'token'    => $this->token,
+                        'ttl'      => $ttl,
                     ]
                 );
-            } else {
+            } elseif ($timeout > 0) {
+                // Limit log noise by only logging about an acquisition failure
+                // if there was actually a timeout wait involved
+                // otherwise the acquisitio attempt is essentially a poll and
+                // failures are less relevant
                 $this->logger->debug(
-                    'Resource "{resource}" could not be locked by {token}',
+                    'Resource "{resource}" could not be locked by {token} after {timeout} second timeout',
                     [
                         'resource' => $this->resource,
                         'token'    => $this->token,
+                        'timeout'  => $timeout,
                     ]
                 );
             }

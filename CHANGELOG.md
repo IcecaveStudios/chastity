@@ -1,5 +1,10 @@
 # Chastity Changelog
 
+### 0.1.2 (2015-01-31)
+
+* **[IMPROVED]** Reduced log noise by removing "lock request" log message
+* **[IMPROVED]** Reduced log noise by suppressing failure message for lock polls (ie, when timeout is zero)
+
 ### 0.1.1 (2014-12-15)
 
 * **[FIXED]** Removed unnecessary SET operation from redis-extend.lua

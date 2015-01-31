@@ -155,21 +155,13 @@ class LockTest extends PHPUnit_Framework_TestCase
         $this->lock->tryAcquire($this->ttl, $this->timeout);
 
         Phony::inOrder(
+            $this->driver->acquire->called(),
             $this->logger->debug->calledWith(
-                'Resource "{resource}" lock request from {token} with {ttl} second TTL and {timeout} second timeout',
+                'Resource "{resource}" locked by {token} with {ttl} second TTL',
                 [
                     'resource' => '<resource>',
                     'token'    => '<token>',
                     'ttl'      => $this->ttl,
-                    'timeout'  => $this->timeout,
-                ]
-            ),
-            $this->driver->acquire->called(),
-            $this->logger->debug->calledWith(
-                'Resource "{resource}" successfully locked by {token}',
-                [
-                    'resource' => '<resource>',
-                    'token'    => '<token>',
                 ]
             )
         );
@@ -189,23 +181,38 @@ class LockTest extends PHPUnit_Framework_TestCase
         $this->lock->tryAcquire($this->ttl, $this->timeout);
 
         Phony::inOrder(
-            $this->logger->debug->calledWith(
-                'Resource "{resource}" lock request from {token} with {ttl} second TTL and {timeout} second timeout',
-                [
-                    'resource' => '<resource>',
-                    'token'    => '<token>',
-                    'ttl'      => $this->ttl,
-                    'timeout'  => $this->timeout,
-                ]
-            ),
             $this->driver->acquire->called(),
             $this->logger->debug->calledWith(
-                'Resource "{resource}" could not be locked by {token}',
+                'Resource "{resource}" could not be locked by {token} after {timeout} second timeout',
                 [
                     'resource' => '<resource>',
                     'token'    => '<token>',
+                    'timeout'  => $this->timeout,
                 ]
             )
+        );
+    }
+
+    public function testTryAcquireFailureLoggingWithZeroTimeout()
+    {
+        $this
+            ->driver
+            ->acquire
+            ->returns(false);
+
+        $this->lock->setLogger(
+            $this->logger->mock()
+        );
+
+        $this->lock->tryAcquire($this->ttl, 0);
+
+        $this->logger->debug->never()->calledWith(
+            'Resource "{resource}" could not be locked by {token} after {timeout} second timeout',
+            [
+                'resource' => '<resource>',
+                'token'    => '<token>',
+                'timeout'  => $this->timeout,
+            ]
         );
     }
 
