@@ -12,6 +12,8 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->redisClient            = Phony::mock(ClientInterface::class);
+        $this->extendScript           = Phony::mock(LuaScriptInterface::class);
+        $this->releaseScript          = Phony::mock(LuaScriptInterface::class);
         $this->communicationException = Phony::fullMock(CommunicationException::class)->mock();
 
         $this
@@ -34,11 +36,10 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
                 }
             );
 
-        $this->extendScript  = __DIR__ . '/../../../../src/Driver/Redis/redis-extend.lua';
-        $this->releaseScript = __DIR__ . '/../../../../src/Driver/Redis/redis-release.lua';
-
         $this->driver = new RedisDriver(
-            $this->redisClient->mock()
+            $this->redisClient->mock(),
+            $this->extendScript->mock(),
+            $this->releaseScript->mock()
         );
     }
 
@@ -105,31 +106,20 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
     public function testExtend()
     {
         $this
-            ->redisClient
-            ->evalsha
+            ->extendScript
+            ->invoke
             ->returns(1500);
 
         $result = $this->driver->extend('<resource>', '<token>', 1.5);
 
-        Phony::inOrder(
-            $this
-                ->redisClient
-                ->script
-                ->calledWith(
-                    'LOAD',
-                    file_get_contents($this->extendScript)
-                ),
-            $this
-                ->redisClient
-                ->evalsha
-                ->calledWith(
-                    sha1_file($this->extendScript),
-                    1,
-                    'chastity:<resource>',
-                    '<token>',
-                    1500
-                )
-        );
+        $this
+            ->extendScript
+            ->invoke
+            ->calledWith(
+                'chastity:<resource>',
+                '<token>',
+                1500
+            );
 
         $this->assertSame(
             1.5,
@@ -137,28 +127,11 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExtendOnlyLoadsScriptOnce()
-    {
-        $this
-            ->redisClient
-            ->evalsha
-            ->returns(1500);
-
-        $this->driver->extend('<resource>', '<token>', 1.5);
-        $this->driver->extend('<resource>', '<token>', 1.5);
-
-        $this
-            ->redisClient
-            ->script
-            ->once()
-            ->called();
-    }
-
     public function testExtendWithCommunicationException()
     {
         $this
-            ->redisClient
-            ->evalsha
+            ->extendScript
+            ->invoke
             ->throws($this->communicationException);
 
         $this->setExpectedException(
@@ -175,30 +148,19 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
     public function testRelease()
     {
         $this
-            ->redisClient
-            ->evalsha
+            ->releaseScript
+            ->invoke
             ->returns(true);
 
         $result = $this->driver->release('<resource>', '<token>');
 
-        Phony::inOrder(
-            $this
-                ->redisClient
-                ->script
-                ->calledWith(
-                    'LOAD',
-                    file_get_contents($this->releaseScript)
-                ),
-            $this
-                ->redisClient
-                ->evalsha
-                ->calledWith(
-                    sha1_file($this->releaseScript),
-                    1,
-                    'chastity:<resource>',
-                    '<token>'
-                )
-        );
+        $this
+            ->releaseScript
+            ->invoke
+            ->calledWith(
+                'chastity:<resource>',
+                '<token>'
+            );
 
         $this->assertTrue(
             $result
@@ -208,8 +170,8 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
     public function testReleaseFailure()
     {
         $this
-            ->redisClient
-            ->evalsha
+            ->releaseScript
+            ->invoke
             ->returns(false);
 
         $this->assertFalse(
@@ -217,28 +179,11 @@ class RedisDriverTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReleaseOnlyLoadsScriptOnce()
-    {
-        $this
-            ->redisClient
-            ->evalsha
-            ->returns(true);
-
-        $this->driver->release('<resource>', '<token>');
-        $this->driver->release('<resource>', '<token>');
-
-        $this
-            ->redisClient
-            ->script
-            ->once()
-            ->called();
-    }
-
     public function testReleaseWithCommunicationException()
     {
         $this
-            ->redisClient
-            ->evalsha
+            ->releaseScript
+            ->invoke
             ->throws($this->communicationException);
 
         $this->setExpectedException(
