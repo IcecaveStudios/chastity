@@ -31,4 +31,4 @@ in a distributed environment.
 <!-- references -->
 [Build Status]: http://img.shields.io/travis/IcecaveStudios/chastity/develop.svg?style=flat-square
 [Test Coverage]: http://img.shields.io/coveralls/IcecaveStudios/chastity/develop.svg?style=flat-square
-[SemVer]: http://img.shields.io/:semver-0.1.2-yellow.svg?style=flat-square
+[SemVer]: http://img.shields.io/:semver-0.1.3-yellow.svg?style=flat-square

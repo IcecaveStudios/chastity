@@ -1,5 +1,9 @@
 # Chastity Changelog
 
+### 0.1.3 (2015-02-10)
+
+* **[FIXED]** The Redis lock driver now reloads LUA scripts if they are not already present on the server
+
 ### 0.1.2 (2015-01-31)
 
 * **[IMPROVED]** Reduced log noise by removing "lock request" log message
