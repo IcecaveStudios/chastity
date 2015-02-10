@@ -12,11 +12,34 @@ class RedisDriver implements DriverInterface
     use PollingDriverTrait;
 
     /**
-     * @param ClientInterface $redisClient The connection to the Redis server.
+     * @param ClientInterface    $redisClient   The connection to the Redis server.
+     * @param LuaScriptInterface $extendScript  The LUA script used to extend locks.
+     * @param LuaScriptInterface $releaseScript The LUA script used to release locks.
      */
-    public function __construct(ClientInterface $redisClient)
-    {
-        $this->redisClient = $redisClient;
+    public function __construct(
+        ClientInterface $redisClient,
+        LuaScriptInterface $extendScript = null,
+        LuaScriptInterface $releaseScript = null
+    ) {
+        if (null === $extendScript) {
+            $extendScript = new LuaScript(
+                $redisClient,
+                __DIR__ . '/redis-extend.lua',
+                1 // key count
+            );
+        }
+
+        if (null === $releaseScript) {
+            $releaseScript = new LuaScript(
+                $redisClient,
+                __DIR__ . '/redis-release.lua',
+                1 // key count
+            );
+        }
+
+        $this->redisClient   = $redisClient;
+        $this->extendScript  = $extendScript;
+        $this->releaseScript = $releaseScript;
     }
 
     /**
@@ -57,16 +80,7 @@ class RedisDriver implements DriverInterface
     public function extend($resource, $token, $ttl)
     {
         try {
-            if (!$this->extendHash) {
-                $this->extendHash = $this->redisClient->script(
-                    'LOAD',
-                    file_get_contents(__DIR__ . '/redis-extend.lua')
-                );
-            }
-
-            $ttl = $this->redisClient->evalsha(
-                $this->extendHash,
-                1,
+            $ttl = $this->extendScript->invoke(
                 $this->generateKey($resource),
                 $token,
                 max(1, intval($ttl * 1000))
@@ -91,16 +105,7 @@ class RedisDriver implements DriverInterface
     public function release($resource, $token)
     {
         try {
-            if (!$this->releaseHash) {
-                $this->releaseHash = $this->redisClient->script(
-                    'LOAD',
-                    file_get_contents(__DIR__ . '/redis-release.lua')
-                );
-            }
-
-            return (bool) $this->redisClient->evalsha(
-                $this->releaseHash,
-                1,
+            return (bool) $this->releaseScript->invoke(
                 $this->generateKey($resource),
                 $token
             );
@@ -123,6 +128,6 @@ class RedisDriver implements DriverInterface
     }
 
     private $redisClient;
-    private $extendHash;
-    private $releaseHash;
+    private $extendScript;
+    private $releaseScript;
 }
