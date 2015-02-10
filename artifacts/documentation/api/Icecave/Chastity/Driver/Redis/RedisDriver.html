@@ -36,7 +36,7 @@
                     
                 </td>
                 <td class="last">
-                    <a href="#method___construct">__construct</a>(<abbr title="Predis\ClientInterface">ClientInterface</abbr> $redisClient)
+                    <a href="#method___construct">__construct</a>(<abbr title="Predis\ClientInterface">ClientInterface</abbr> $redisClient, <a href="../../../../Icecave/Chastity/Driver/Redis/LuaScriptInterface.html"><abbr title="Icecave\Chastity\Driver\Redis\LuaScriptInterface">LuaScriptInterface</abbr></a> $extendScript = null, <a href="../../../../Icecave/Chastity/Driver/Redis/LuaScriptInterface.html"><abbr title="Icecave\Chastity\Driver\Redis\LuaScriptInterface">LuaScriptInterface</abbr></a> $releaseScript = null)
                     <p>
 </p>
                 </td>
@@ -78,9 +78,9 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 17</div>
+        <div class="location">at line 19</div>
         <code>            public            
-    <strong>__construct</strong>(<abbr title="Predis\ClientInterface">ClientInterface</abbr> $redisClient)</code>
+    <strong>__construct</strong>(<abbr title="Predis\ClientInterface">ClientInterface</abbr> $redisClient, <a href="../../../../Icecave/Chastity/Driver/Redis/LuaScriptInterface.html"><abbr title="Icecave\Chastity\Driver\Redis\LuaScriptInterface">LuaScriptInterface</abbr></a> $extendScript = null, <a href="../../../../Icecave/Chastity/Driver/Redis/LuaScriptInterface.html"><abbr title="Icecave\Chastity\Driver\Redis\LuaScriptInterface">LuaScriptInterface</abbr></a> $releaseScript = null)</code>
     </h3>
     <div class="details">
         <p>
@@ -96,6 +96,16 @@
                 <td>$redisClient</td>
                 <td>The connection to the Redis server.</td>
             </tr>
+                    <tr>
+                <td><a href="../../../../Icecave/Chastity/Driver/Redis/LuaScriptInterface.html"><abbr title="Icecave\Chastity\Driver\Redis\LuaScriptInterface">LuaScriptInterface</abbr></a></td>
+                <td>$extendScript</td>
+                <td>The LUA script used to extend locks.</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../../Icecave/Chastity/Driver/Redis/LuaScriptInterface.html"><abbr title="Icecave\Chastity\Driver\Redis\LuaScriptInterface">LuaScriptInterface</abbr></a></td>
+                <td>$releaseScript</td>
+                <td>The LUA script used to release locks.</td>
+            </tr>
             </table>
 
             
@@ -105,7 +115,7 @@
     </div>
 
                 <h3 id="method_poll">
-        <div class="location">at line 32</div>
+        <div class="location">at line 55</div>
         <code>            public            boolean
     <strong>poll</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\Redis\float">float</abbr> $ttl)</code>
     </h3>
@@ -159,7 +169,7 @@
     </div>
 
                 <h3 id="method_extend">
-        <div class="location">at line 57</div>
+        <div class="location">at line 80</div>
         <code>            public            integer|<abbr title="Icecave\Chastity\Driver\Redis\float">float</abbr>
     <strong>extend</strong>(string $resource, string $token, integer|<abbr title="Icecave\Chastity\Driver\Redis\float">float</abbr> $ttl)</code>
     </h3>
@@ -213,7 +223,7 @@
     </div>
 
                 <h3 id="method_release">
-        <div class="location">at line 91</div>
+        <div class="location">at line 105</div>
         <code>            public            boolean
     <strong>release</strong>(string $resource, string $token)</code>
     </h3>
