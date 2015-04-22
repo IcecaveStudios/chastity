@@ -11,9 +11,9 @@ use Predis\Client;
 
 $factory = new LockFactory(
     new RedisDriver(
-        new Client(),
-        new UuidVersion4Generator()
-    )
+        new Client()
+    ),
+    new UuidVersion4Generator()
 );
 
 echo 'Waiting for lock ...' . PHP_EOL;
